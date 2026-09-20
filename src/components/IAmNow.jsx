@@ -26,15 +26,18 @@ export default function IAmNow() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const cycle = setInterval(() => {
-      setVisible(false)
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % WORDS.length)
-        setVisible(true)
-      }, 250)
-    }, 1800)
+    const cycle = setInterval(() => setVisible(false), 1800)
     return () => clearInterval(cycle)
   }, [])
+
+  useEffect(() => {
+    if (visible) return
+    const swap = setTimeout(() => {
+      setIndex((prev) => (prev + 1) % WORDS.length)
+      setVisible(true)
+    }, 250)
+    return () => clearTimeout(swap)
+  }, [visible])
 
   return (
     <Box

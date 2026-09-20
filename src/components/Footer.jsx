@@ -13,7 +13,12 @@ const NAV_LINKS = [
   { label: 'Socials', href: '#socials' },
 ]
 
-const SOCIAL_ICONS = [InstagramIcon, TikTokIcon, FacebookIcon, XIcon]
+const SOCIAL_ICONS = [
+  { name: 'instagram', Icon: InstagramIcon },
+  { name: 'tiktok', Icon: TikTokIcon },
+  { name: 'facebook', Icon: FacebookIcon },
+  { name: 'x', Icon: XIcon },
+]
 
 export default function Footer() {
   const scrollTo = (href) => (event) => {
@@ -98,9 +103,9 @@ export default function Footer() {
             </Stack>
 
             <Stack direction="row" spacing={1} sx={{ mt: 3 }}>
-              {SOCIAL_ICONS.map((Icon, i) => (
+              {SOCIAL_ICONS.map(({ name, Icon }) => (
                 <IconButton
-                  key={i}
+                  key={name}
                   size="small"
                   aria-label="Social link coming soon"
                   sx={{
