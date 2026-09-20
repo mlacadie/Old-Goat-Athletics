@@ -16,7 +16,7 @@ export default function Socials() {
   return (
     <Box id="socials" component="section" sx={{ bgcolor: colors.bone, py: { xs: 10, md: 14 } }}>
       <Container maxWidth="lg">
-        <Stack spacing={1.5} alignItems="center" textAlign="center" sx={{ mb: 6 }}>
+        <Stack spacing={1.5} sx={{ alignItems: 'center', textAlign: 'center', mb: 6 }}>
           <Typography
             sx={{
               color: colors.navy,

@@ -3,7 +3,7 @@ import Header from './components/Header.jsx'
 import Hero from './components/Hero.jsx'
 import Mission from './components/Mission.jsx'
 import IAmNow from './components/IAmNow.jsx'
-import Washed from './components/Washed.jsx'
+import Merch from './components/Merch.jsx'
 import Community from './components/Community.jsx'
 import Socials from './components/Socials.jsx'
 import Footer from './components/Footer.jsx'
@@ -15,7 +15,7 @@ function App() {
       <Hero />
       <Mission />
       <IAmNow />
-      <Washed />
+      <Merch />
       <Community />
       <Socials />
       <Footer />

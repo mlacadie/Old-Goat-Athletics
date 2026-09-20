@@ -8,7 +8,7 @@ import { colors } from '../theme.js'
 const NAV_LINKS = [
   { label: 'Mission', href: '#mission' },
   { label: 'I ___ Now', href: '#i-now' },
-  { label: 'Washed', href: '#washed' },
+  { label: 'Merch', href: '#merch' },
   { label: 'Track Club', href: '#track-club' },
   { label: 'Socials', href: '#socials' },
 ]
@@ -24,25 +24,29 @@ export default function Footer() {
   return (
     <Box component="footer" sx={{ bgcolor: colors.navyDarker, color: '#fff', pt: 8, pb: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={5} justifyContent="space-between">
+        <Grid container spacing={5} sx={{ justifyContent: 'space-between' }}>
           <Grid size={{ xs: 12, md: 5 }}>
-            <Stack direction="row" spacing={1.2} alignItems="center" sx={{ mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.2, mb: 2 }}>
               <Box
                 component="img"
-                src="/logos/OG_Horns.svg"
+                src="/logos/oldGoat.svg"
                 alt=""
-                sx={{ height: 36, filter: 'brightness(0) invert(1)' }}
+                sx={{ width: 55, height: 'auto', filter: 'brightness(0) invert(1)' }}
               />
-              <Typography
+              <Box
                 sx={{
                   fontFamily: '"Bebas Neue", sans-serif',
-                  fontSize: '1.25rem',
+                  fontSize: '2rem',
                   letterSpacing: '0.04em',
+                  color: '#fff',
+                  lineHeight: 1,
                 }}
               >
-                OLD GOAT ATHLETICS
-              </Typography>
-            </Stack>
+                OLD GOAT
+                <br />
+                ATHLETICS
+              </Box>
+            </Box>
             <Typography sx={{ color: 'rgba(255,255,255,0.65)', maxWidth: 360, lineHeight: 1.7 }}>
               A community for former college athletes to keep competing, find a new sport,
               and stay active for life.

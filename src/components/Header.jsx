@@ -22,7 +22,7 @@ import { colors } from '../theme.js'
 const NAV_LINKS = [
   { label: 'Mission', href: '#mission' },
   { label: 'I ___ Now', href: '#i-now' },
-  { label: 'Washed', href: '#washed' },
+  { label: 'Merch', href: '#merch' },
   { label: 'Track Club', href: '#track-club' },
   { label: 'Socials', href: '#socials' },
 ]

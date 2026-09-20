@@ -43,7 +43,7 @@ export default function IAmNow() {
       sx={{ bgcolor: 'background.paper', py: { xs: 10, md: 14 } }}
     >
       <Container maxWidth="md">
-        <Stack spacing={4} alignItems="center" textAlign="center">
+        <Stack spacing={4} sx={{ alignItems: 'center', textAlign: 'center' }}>
           <Typography
             sx={{
               color: colors.navy,
@@ -99,22 +99,6 @@ export default function IAmNow() {
             blank &mdash; helping former college athletes find the next sport, hobby, or
             competitive outlet that makes them feel like themselves again.
           </Typography>
-
-          <Stack direction="row" spacing={1.25} useFlexGap flexWrap="wrap" justifyContent="center">
-            {WORDS.map((word) => (
-              <Chip
-                key={word}
-                label={`I ${word.toLowerCase()} now`}
-                sx={{
-                  bgcolor: colors.bone,
-                  color: colors.navy,
-                  fontWeight: 600,
-                  border: `1px solid ${colors.grayLight}`,
-                  '&:hover': { bgcolor: colors.navy, color: '#fff' },
-                }}
-              />
-            ))}
-          </Stack>
         </Stack>
       </Container>
     </Box>

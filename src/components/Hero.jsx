@@ -34,7 +34,7 @@ export default function Hero() {
           top: '50%',
           transform: 'translateY(-50%)',
           width: { xs: '95%', md: '58%' },
-          maxWidth: 760,
+          maxWidth: 1500,
           opacity: 0.12,
           filter: 'brightness(0) invert(1)',
           pointerEvents: 'none',

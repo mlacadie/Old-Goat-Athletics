@@ -38,8 +38,7 @@ export default function Community() {
               <Stack
                 direction="row"
                 spacing={1}
-                alignItems="center"
-                sx={{ color: colors.navy, mb: 2 }}
+                sx={{ alignItems: 'center', color: colors.navy, mb: 2 }}
               >
                 <DirectionsRunIcon fontSize="small" />
                 <Typography
