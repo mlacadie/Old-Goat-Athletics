@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Container, Typography, Chip, Stack } from '@mui/material'
 import { colors } from '../theme.js'
 
+
 const WORDS = [
   'RUN',
   'GOLF',
