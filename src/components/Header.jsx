@@ -73,7 +73,7 @@ export default function Header() {
             >
               <Box
                 component="img"
-                src="/logos/oldGoat.svg"
+                src={`${import.meta.env.BASE_URL}logos/oldGoat.svg`}
                 alt=""
                 sx={{
                   width: 55,

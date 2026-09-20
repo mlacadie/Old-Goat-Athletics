@@ -34,7 +34,7 @@ export default function Footer() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.2, mb: 2 }}>
               <Box
                 component="img"
-                src="/logos/oldGoat.svg"
+                src={`${import.meta.env.BASE_URL}logos/oldGoat.svg`}
                 alt=""
                 sx={{ width: 55, height: 'auto', filter: 'brightness(0) invert(1)' }}
               />

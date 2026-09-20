@@ -25,7 +25,7 @@ export default function Hero() {
     >
       <Box
         component="img"
-        src="/logos/OGTC_Old_Goat.svg"
+        src={`${import.meta.env.BASE_URL}logos/OGTC_Old_Goat.svg`}
         alt=""
         aria-hidden="true"
         sx={{

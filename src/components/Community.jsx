@@ -28,7 +28,7 @@ export default function Community() {
             >
               <Box
                 component="img"
-                src="/team.png"
+                src={`${import.meta.env.BASE_URL}team.png`}
                 alt="Old Goat Track Club"
                 sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />

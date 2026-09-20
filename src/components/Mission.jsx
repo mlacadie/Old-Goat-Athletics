@@ -64,7 +64,7 @@ export default function Mission() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Box
               component="img"
-              src="/logos/OGTC_OGoatG_KC.svg"
+              src={`${import.meta.env.BASE_URL}logos/OGTC_OGoatG_KC.svg`}
               alt="Old Goat Athletics — Keep Competing"
               sx={{
                 width: '100%',
