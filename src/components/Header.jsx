@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { colors } from '../theme.js'
 
+
 const NAV_LINKS = [
   { label: 'Mission', href: '#mission' },
   { label: 'I ___ Now', href: '#i-now' },
