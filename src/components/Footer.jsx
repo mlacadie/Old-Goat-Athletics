@@ -125,7 +125,7 @@ export default function Footer() {
             textAlign: 'center',
           }}
         >
-          © {new Date().getFullYear()} Old Goat Athletics. Keep competing.
+          {new Date().getFullYear()} Old Goat Athletics. Keep competing.
         </Typography>
       </Container>
     </Box>

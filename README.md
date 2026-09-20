@@ -1,16 +1,21 @@
-# React + Vite
+# Old Goat Athletics
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Marketing site for Old Goat Athletics — a community for former college athletes to keep competing, find a new sport, and stay active for life.
 
-Currently, two official plugins are available:
+Built with React + Vite + MUI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Shared brand colors and MUI theme config live in `src/theme.js`.
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+yarn install
+yarn dev
+```
 
-## Expanding the Oxlint configuration
+## Scripts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- `yarn dev` — start the Vite dev server
+- `yarn build` — production build
+- `yarn preview` — preview the production build locally
+- `yarn lint` — run Oxlint

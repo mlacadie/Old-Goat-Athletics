@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   AppBar,
   Toolbar,
-  Container,
   Box,
   Button,
   IconButton,
@@ -58,7 +57,7 @@ export default function Header() {
           borderBottom: scrolled ? 'none' : `1px solid rgba(255,255,255,0.12)`,
         }}
       >
-        <Container maxWidth="lg">
+        <Box sx={{ px: { xs: 2, md: 8 } }}>
           <Toolbar disableGutters sx={{ py: 1, gap: 2 }}>
             <Box
               component="a"
@@ -67,7 +66,7 @@ export default function Header() {
               sx={{
                 display: 'flex',
                 alignItems: 'flex-end',
-                gap: 1.2,
+                gap: 1,
                 textDecoration: 'none',
                 flexGrow: { xs: 1, md: 0 },
               }}
@@ -153,7 +152,7 @@ export default function Header() {
               <MenuIcon />
             </IconButton>
           </Toolbar>
-        </Container>
+        </Box>
 
         <Drawer
           anchor="right"

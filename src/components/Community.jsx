@@ -21,16 +21,16 @@ export default function Community() {
               sx={{
                 bgcolor: colors.navy,
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'stretch',
                 justifyContent: 'center',
-                p: { xs: 6, md: 5 },
+                minHeight: { xs: 260, md: '100%' },
               }}
             >
               <Box
                 component="img"
-                src="/logos/OGTC_Old_Goat.svg"
+                src="/team.png"
                 alt="Old Goat Track Club"
-                sx={{ width: '100%', maxWidth: 280, filter: 'brightness(0) invert(1)' }}
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </Grid>
 
