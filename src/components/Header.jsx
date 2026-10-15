@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -17,15 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { colors } from '../theme.js'
-
-
-const NAV_LINKS = [
-  { label: 'Mission', href: '#mission' },
-  { label: 'I ___ Now', href: '#i-now' },
-  { label: 'Merch', href: '#merch' },
-  { label: 'Track Club', href: '#track-club' },
-  { label: 'Socials', href: '#socials' },
-]
+import { NAV_LINKS } from '../data/navLinks.js'
 
 function HideOnScroll({ children }) {
   const trigger = useScrollTrigger()
@@ -38,12 +31,19 @@ function HideOnScroll({ children }) {
 
 export default function Header() {
   const [open, setOpen] = useState(false)
-  const scrolled = useScrollTrigger({ disableHysteresis: true, threshold: 8 })
+  const scrollTriggered = useScrollTrigger({ disableHysteresis: true, threshold: 8 })
+  const location = useLocation()
+  const navigate = useNavigate()
+  const scrolled = scrollTriggered || location.pathname !== '/'
 
-  const handleNavClick = (href) => (event) => {
+  const handleAnchorClick = (href) => (event) => {
     event.preventDefault()
     setOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    if (location.pathname === '/') {
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/', { state: { scrollTo: href } })
+    }
   }
 
   return (
@@ -63,7 +63,7 @@ export default function Header() {
             <Box
               component="a"
               href="#top"
-              onClick={handleNavClick('#top')}
+              onClick={handleAnchorClick('#top')}
               sx={{
                 display: 'flex',
                 alignItems: 'flex-end',
@@ -106,25 +106,45 @@ export default function Header() {
                 ml: 'auto',
               }}
             >
-              {NAV_LINKS.map((link) => (
-                <Button
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick(link.href)}
-                  sx={{
-                    color: 'rgba(255,255,255,0.88)',
-                    px: 1.75,
-                    fontWeight: 600,
-                    borderRadius: 2,
-                    '&:hover': {
-                      color: '#fff',
-                      bgcolor: 'rgba(255,255,255,0.08)',
-                    },
-                  }}
-                >
-                  {link.label}
-                </Button>
-              ))}
+              {NAV_LINKS.map((link) =>
+                link.type === 'route' ? (
+                  <Button
+                    key={link.to}
+                    component={RouterLink}
+                    to={link.to}
+                    sx={{
+                      color: 'rgba(255,255,255,0.88)',
+                      px: 1.75,
+                      fontWeight: 600,
+                      borderRadius: 2,
+                      '&:hover': {
+                        color: '#fff',
+                        bgcolor: 'rgba(255,255,255,0.08)',
+                      },
+                    }}
+                  >
+                    {link.label}
+                  </Button>
+                ) : (
+                  <Button
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleAnchorClick(link.href)}
+                    sx={{
+                      color: 'rgba(255,255,255,0.88)',
+                      px: 1.75,
+                      fontWeight: 600,
+                      borderRadius: 2,
+                      '&:hover': {
+                        color: '#fff',
+                        bgcolor: 'rgba(255,255,255,0.08)',
+                      },
+                    }}
+                  >
+                    {link.label}
+                  </Button>
+                )
+              )}
               <Button
                 href="https://ogtc.net/index.html"
                 target="_blank"
@@ -171,20 +191,35 @@ export default function Header() {
             </IconButton>
           </Box>
           <List>
-            {NAV_LINKS.map((link) => (
-              <ListItem key={link.href} disablePadding>
-                <ListItemButton onClick={handleNavClick(link.href)}>
-                  <ListItemText
-                    primary={link.label}
-                    slotProps={{
-                      primary: {
-                        sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
-                      },
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            {NAV_LINKS.map((link) =>
+              link.type === 'route' ? (
+                <ListItem key={link.to} disablePadding>
+                  <ListItemButton component={RouterLink} to={link.to} onClick={() => setOpen(false)}>
+                    <ListItemText
+                      primary={link.label}
+                      slotProps={{
+                        primary: {
+                          sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
+                        },
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ) : (
+                <ListItem key={link.href} disablePadding>
+                  <ListItemButton onClick={handleAnchorClick(link.href)}>
+                    <ListItemText
+                      primary={link.label}
+                      slotProps={{
+                        primary: {
+                          sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
+                        },
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              )
+            )}
             <ListItem disablePadding sx={{ mt: 1 }}>
               <ListItemButton
                 component="a"

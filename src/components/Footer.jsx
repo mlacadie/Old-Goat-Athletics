@@ -1,17 +1,11 @@
 import { Box, Container, Grid, Typography, Stack, IconButton, Divider } from '@mui/material'
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import XIcon from '@mui/icons-material/X'
 import TikTokIcon from '../icons/TikTokIcon.jsx'
 import { colors } from '../theme.js'
-
-const NAV_LINKS = [
-  { label: 'Mission', href: '#mission' },
-  { label: 'I ___ Now', href: '#i-now' },
-  { label: 'Merch', href: '#merch' },
-  { label: 'Track Club', href: '#track-club' },
-  { label: 'Socials', href: '#socials' },
-]
+import { NAV_LINKS } from '../data/navLinks.js'
 
 const SOCIAL_ICONS = [
   { name: 'instagram', Icon: InstagramIcon },
@@ -21,9 +15,16 @@ const SOCIAL_ICONS = [
 ]
 
 export default function Footer() {
-  const scrollTo = (href) => (event) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handleAnchorClick = (href) => (event) => {
     event.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    if (location.pathname === '/') {
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/', { state: { scrollTo: href } })
+    }
   }
 
   return (
@@ -63,22 +64,37 @@ export default function Footer() {
               Explore
             </Typography>
             <Stack spacing={1.2}>
-              {NAV_LINKS.map((link) => (
-                <Typography
-                  key={link.href}
-                  component="a"
-                  href={link.href}
-                  onClick={scrollTo(link.href)}
-                  sx={{
-                    color: 'rgba(255,255,255,0.65)',
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    '&:hover': { color: colors.gold },
-                  }}
-                >
-                  {link.label}
-                </Typography>
-              ))}
+              {NAV_LINKS.map((link) =>
+                link.type === 'route' ? (
+                  <Typography
+                    key={link.to}
+                    component={RouterLink}
+                    to={link.to}
+                    sx={{
+                      color: 'rgba(255,255,255,0.65)',
+                      textDecoration: 'none',
+                      '&:hover': { color: colors.gold },
+                    }}
+                  >
+                    {link.label}
+                  </Typography>
+                ) : (
+                  <Typography
+                    key={link.href}
+                    component="a"
+                    href={link.href}
+                    onClick={handleAnchorClick(link.href)}
+                    sx={{
+                      color: 'rgba(255,255,255,0.65)',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      '&:hover': { color: colors.gold },
+                    }}
+                  >
+                    {link.label}
+                  </Typography>
+                )
+              )}
             </Stack>
           </Grid>
 

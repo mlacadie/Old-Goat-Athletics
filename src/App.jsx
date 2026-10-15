@@ -1,25 +1,25 @@
 import { Box } from '@mui/material'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
-import Hero from './components/Hero.jsx'
-import Mission from './components/Mission.jsx'
-import IAmNow from './components/IAmNow.jsx'
-import Merch from './components/Merch.jsx'
-import Community from './components/Community.jsx'
-import Socials from './components/Socials.jsx'
 import Footer from './components/Footer.jsx'
+import Home from './pages/Home.jsx'
+import Groups from './pages/Groups.jsx'
+import Contact from './pages/Contact.jsx'
 
 function App() {
   return (
-    <Box>
-      <Header />
-      <Hero />
-      <Mission />
-      <IAmNow />
-      <Merch />
-      <Community />
-      <Socials />
-      <Footer />
-    </Box>
+    <HashRouter>
+      <Box>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+        <Footer />
+      </Box>
+    </HashRouter>
   )
 }
 

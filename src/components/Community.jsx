@@ -1,4 +1,5 @@
 import { Box, Container, Grid, Typography, Button, Stack, Paper } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import { colors } from '../theme.js'
@@ -67,20 +68,31 @@ export default function Community() {
                 crew that still shows up early.
               </Typography>
 
-              <Button
-                size="large"
-                variant="contained"
-                href="https://ogtc.net/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                endIcon={<NorthEastIcon sx={{ fontSize: 16 }} />}
-                sx={{
-                  bgcolor: colors.navy,
-                  '&:hover': { bgcolor: colors.navyDark },
-                }}
-              >
-                Visit ogtc.net
-              </Button>
+              <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
+                <Button
+                  size="large"
+                  variant="contained"
+                  href="https://ogtc.net/index.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  endIcon={<NorthEastIcon sx={{ fontSize: 16 }} />}
+                  sx={{
+                    bgcolor: colors.navy,
+                    '&:hover': { bgcolor: colors.navyDark },
+                  }}
+                >
+                  Visit ogtc.net
+                </Button>
+                <Button
+                  size="large"
+                  variant="outlined"
+                  component={RouterLink}
+                  to="/groups"
+                  sx={{ color: colors.navy, borderColor: colors.navy }}
+                >
+                  Browse all clubs
+                </Button>
+              </Stack>
             </Grid>
           </Grid>
         </Paper>
