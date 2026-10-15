@@ -1,4 +1,5 @@
 import { Box, Container, Typography, Button, Stack } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { colors } from '../theme.js'
@@ -85,7 +86,8 @@ export default function Hero() {
             <Button
               size="large"
               variant="contained"
-              onClick={scrollTo('#track-club')}
+              component={RouterLink}
+              to="/groups"
               sx={{
                 bgcolor: colors.gold,
                 color: colors.navyDarker,
@@ -93,7 +95,7 @@ export default function Hero() {
                 '&:hover': { bgcolor: '#e0b04f' },
               }}
             >
-              Meet the Track Club
+              Discover Groups
             </Button>
             <Button
               size="large"
