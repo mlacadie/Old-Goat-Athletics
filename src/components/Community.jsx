@@ -64,7 +64,7 @@ export default function Community() {
               <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem', lineHeight: 1.75, mb: 3 }}>
                 If running is your &ldquo;I ___ now,&rdquo; the Old Goat Track Club is where it
                 happens. It&rsquo;s our home base for former college runners and competitors who
-                traded the eligibility clock for the open road &mdash; workouts, races, and a
+                traded the eligibility clock for the open road: workouts, races, and a
                 crew that still shows up early.
               </Typography>
 

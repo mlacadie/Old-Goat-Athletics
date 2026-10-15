@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Box, Container, Typography, Chip, Stack } from '@mui/material'
 import { colors } from '../theme.js'
 
-
 const WORDS = [
   'RUN',
   'GOLF',
@@ -27,18 +26,22 @@ export default function IAmNow() {
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    const cycle = setInterval(() => setVisible(false), 1800)
-    return () => clearInterval(cycle)
-  }, [])
+    let timeoutId
 
-  useEffect(() => {
-    if (visible) return
-    const swap = setTimeout(() => {
+    const fadeOut = () => {
+      setVisible(false)
+      timeoutId = setTimeout(swap, 250)
+    }
+
+    const swap = () => {
       setIndex((prev) => (prev + 1) % WORDS.length)
       setVisible(true)
-    }, 250)
-    return () => clearTimeout(swap)
-  }, [visible])
+      timeoutId = setTimeout(fadeOut, 1800)
+    }
+
+    timeoutId = setTimeout(fadeOut, 1800)
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   return (
     <Box
@@ -100,7 +103,7 @@ export default function IAmNow() {
           >
             For years, your sport was your identity. Then the eligibility ran out and the
             jersey went in a box. Old Goat Athletics is the community for filling in that
-            blank &mdash; helping former college athletes find the next sport, hobby, or
+            blank, helping former college athletes find the next sport, hobby, or
             competitive outlet that makes them feel like themselves again.
           </Typography>
         </Stack>

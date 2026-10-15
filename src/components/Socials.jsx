@@ -35,7 +35,7 @@ export default function Socials() {
             We&rsquo;re just getting started.
           </Typography>
           <Typography sx={{ color: 'text.secondary', maxWidth: 560, fontSize: '1.05rem' }}>
-            Our socials are lacing up. Check back soon for the first drop &mdash; workouts,
+            Our socials are lacing up. Check back soon for the first drop: workouts,
             stories, and proof that the competitive fire never really goes out.
           </Typography>
         </Stack>

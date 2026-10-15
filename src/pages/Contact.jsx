@@ -109,7 +109,7 @@ export default function Contact() {
             <Grid size={{ xs: 12, md: 7 }} sx={{ p: { xs: 4, md: 5 } }}>
               {status === 'success' ? (
                 <Alert severity="success">
-                  Thanks for reaching out &mdash; we&rsquo;ll be in touch soon.
+                  Thanks for reaching out. We&rsquo;ll be in touch soon.
                 </Alert>
               ) : (
                 <Box component="form" onSubmit={handleSubmit} noValidate>

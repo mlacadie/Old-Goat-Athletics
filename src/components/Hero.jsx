@@ -77,7 +77,7 @@ export default function Hero() {
             }}
           >
             You put in the years. The early mornings, the film sessions, the locker room.
-            Graduation doesn&rsquo;t end the competitor in you &mdash; it just means it&rsquo;s
+            Graduation doesn&rsquo;t end the competitor in you. It just means it&rsquo;s
             time to find what&rsquo;s next.
           </Typography>
 

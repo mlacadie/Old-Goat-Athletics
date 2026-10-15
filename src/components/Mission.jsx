@@ -8,7 +8,7 @@ const PILLARS = [
   {
     icon: FavoriteBorderIcon,
     title: 'Rebuild Your Identity',
-    body: "Your sport was never just a schedule — it was who you were. We help you carry that identity into whatever's next.",
+    body: "Your sport was never just a schedule. It was who you were, and we help you carry that identity into whatever's next.",
   },
   {
     icon: EmojiPeopleIcon,
@@ -50,13 +50,13 @@ export default function Mission() {
               <Typography component="p" sx={{ color: 'inherit', fontSize: 'inherit', lineHeight: 'inherit' }}>
                 Most college athletes spend their entire lives training for something that
                 ends the day they walk across the stage. One day you&rsquo;re a student-athlete
-                with a locker, a schedule, and a team. The next, that identity is gone &mdash;
+                with a locker, a schedule, and a team. The next, that identity is gone,
                 and a lot of us lose our way for a while.
               </Typography>
               <Typography component="p" sx={{ color: 'inherit', fontSize: 'inherit', lineHeight: 'inherit' }}>
                 Old Goat Athletics exists to catch that fall. We&rsquo;re a community built for
                 former college athletes to stay active, find a new sport or calling, and keep
-                the competitive fire alive &mdash; on their own terms, on their own timeline.
+                the competitive fire alive, on their own terms and their own timeline.
               </Typography>
             </Stack>
           </Grid>

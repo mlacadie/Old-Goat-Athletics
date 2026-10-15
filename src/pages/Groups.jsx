@@ -149,7 +149,7 @@ export default function Groups() {
             }}
           >
             <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
-              No clubs match those filters yet &mdash; know one that should be here?
+              No clubs match those filters yet. Know one that should be here?
             </Typography>
             <Button component={RouterLink} to="/contact" sx={{ mt: 2, color: colors.navy, fontWeight: 700 }}>
               Let us know &rarr;

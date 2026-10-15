@@ -64,7 +64,7 @@ export default function Merch() {
               maxWidth: 620,
             }}
           >
-            We&rsquo;re putting together gear worthy of the herd. Shirts, hats, and more &mdash;
+            We&rsquo;re putting together gear worthy of the herd. Shirts, hats, and more,
             built for goats who still show up. Check back soon.
           </Typography>
 
