@@ -56,7 +56,7 @@ export default function Mission() {
               <Typography component="p" sx={{ color: 'inherit', fontSize: 'inherit', lineHeight: 'inherit' }}>
                 Old Goat Athletics exists to catch that fall. We&rsquo;re a community built for
                 former college athletes to stay active, find a new sport or calling, and keep
-                the competitive fire alive, on their own terms and their own timeline.
+                the competitive fire alive.
               </Typography>
             </Stack>
           </Grid>

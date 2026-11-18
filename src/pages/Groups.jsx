@@ -68,8 +68,7 @@ export default function Groups() {
             Groups &amp; Clubs
           </Typography>
           <Typography sx={{ color: 'text.secondary', maxWidth: 560, fontSize: '1.05rem' }}>
-            A directory of clubs for former college athletes staying competitive in whatever
-            sport is their &ldquo;I ___ now.&rdquo; Starting with one, growing from here.
+            A directory of clubs for former college athletes staying competitive and active.
           </Typography>
         </Stack>
 

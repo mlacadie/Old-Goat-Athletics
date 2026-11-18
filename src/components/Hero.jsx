@@ -77,7 +77,6 @@ export default function Hero() {
               lineHeight: 1.6,
             }}
           >
-            You put in the years. The early mornings, the film sessions, the locker room.
             Graduation doesn&rsquo;t end the competitor in you. It just means it&rsquo;s
             time to find what&rsquo;s next.
           </Typography>
