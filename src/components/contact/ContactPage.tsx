@@ -44,7 +44,7 @@ export default function Contact() {
   }
 
   return (
-    <Box component="section" sx={{ bgcolor: 'background.paper', py: { xs: 14, md: 18 }, minHeight: '100vh' }}>
+    <Box component="section" sx={{ bgcolor: 'background.paper', py: { xs: 14, md: 18 } }}>
       <Container maxWidth="lg">
         <Stack spacing={1.5} sx={{ alignItems: 'center', textAlign: 'center', mb: 6 }}>
           <Typography

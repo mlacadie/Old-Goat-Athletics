@@ -3,6 +3,6 @@
   "plugins": ["react", "oxc", "nextjs"],
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true, "allowExportNames": ["metadata", "generateMetadata", "viewport", "generateViewport"] }]
+    "react/only-export-components": ["warn", { "allowConstantExport": true, "allowExportNames": ["metadata", "generateMetadata", "viewport", "generateViewport", "generateStaticParams"] }]
   }
 }

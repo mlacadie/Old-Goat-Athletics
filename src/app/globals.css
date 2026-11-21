@@ -18,6 +18,22 @@ body {
   overflow-x: clip;
 }
 
+/*
+ * Keep the Footer below the fold on short pages: main is at least one full screen tall
+ * (lvh: the tallest the viewport gets, once mobile browser bars hide), and the page's
+ * last section stretches so its background fills the space.
+ */
+main {
+  min-height: 100vh;
+  min-height: 100lvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main > :last-child {
+  flex-grow: 1;
+}
+
 img {
   max-width: 100%;
   display: block;

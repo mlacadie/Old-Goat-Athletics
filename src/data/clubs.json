@@ -7,7 +7,8 @@
     "state": "MA",
     "country": "USA",
     "description": "Our home base for former college runners and competitors who traded the eligibility clock for the open road: workouts, races, and a crew that still shows up early.",
-    "website": "https://ogtc.net/index.html",
+    "ownerId": "site-admin",
+    "links": [{ "label": "Website", "url": "https://ogtc.net/index.html" }],
     "tags": [
       "distance running",
       "masters",
@@ -24,7 +25,8 @@
     "state": "MA",
     "country": "USA",
     "description": "Early-morning sculling and sweep sessions for ex-collegiate rowers who miss the 5 a.m. alarm more than they admit.",
-    "website": "https://example.com/charles-river-masters-rowing",
+    "ownerId": "site-admin",
+    "links": [{ "label": "Website", "url": "https://example.com/charles-river-masters-rowing" }],
     "tags": [
       "masters",
       "sculling",
@@ -40,7 +42,8 @@
     "state": "MA",
     "country": "USA",
     "description": "Weekend gravel rides and fall cyclocross for former athletes who found a new engine on two wheels.",
-    "website": "https://example.com/bay-state-gravel-collective",
+    "ownerId": "site-admin",
+    "links": [{ "label": "Website", "url": "https://example.com/bay-state-gravel-collective" }],
     "tags": [
       "gravel",
       "cyclocross",

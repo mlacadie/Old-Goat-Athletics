@@ -15,7 +15,7 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | Done |
 | #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | In Progress |
 | #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Planned |
-| #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Planned |
+| #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Done |
 | #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
 | #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
 | #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
@@ -70,7 +70,9 @@ When a feature ships, change its status here, close its issue, and remove the **
 **What it is:** Every Group gets its own page at `/groups/:groupId` (e.g. `/groups/old-goat-track-club`), using the Group's existing `id` slug.
 
 - The Group card's "Visit Site" button is removed. Cards get a **View Group** button that opens the Group page; the external website link moves onto the Group page. (Cards also get a **Join** button once **Joining** exists.)
-- The Group page shows **public info**: name, sport, location, description, website, tags.
+- The Group page shows **public info**: name, sport, location, description, tags, and up to 3 **Group links** (website, socials). Links replace the old single `website` field.
+- Every Group has a required Owner (`ownerId`). Existing Groups are owned by the Site Admin until claimed. The page works out the viewer's role (Visitor, User, Member, Owner) on the server so later features can add members-only content and Owner controls by role.
+- Built from design **G** in [Groups Page Designs](https://claude.ai/artifact/V31KU4Zmjb31sPajZsLQ6d#artboard-GroupLinks), public parts only.
 - The Group page has a banner across the top: the Group banner if one exists (from **Add a Group**), otherwise a branded banner using the default Group image (`public/logos/OGTC_OGoatG_KC.svg`).
 - Space is reserved for members-only content (filled in by later features).
 - Unknown Group ids show a friendly "Group not found" page.
@@ -82,7 +84,8 @@ When a feature ships, change its status here, close its issue, and remove the **
 **What it is:** Any User can add a Group. The person who adds it becomes its **Group Owner**.
 
 - An "Add your Group" button on the Groups page. Visitors who click it are asked to sign in first.
-- The form uses the same fields the Groups page already uses: name, sport, city, state, country, description, website, tags.
+- The form uses the same fields the Groups page already uses: name, sport, city, state, country, description, tags.
+- The form prompts the Owner for up to 3 optional **Group links** (label + URL), such as the Group's website, Instagram, or Strava.
 - **Sport** is picked from a set list of sports that we maintain, not typed in, so the Groups page's sport filter stays clean (no "Running" and "running" as separate pills). **Other** is always the last option in the list. The list lives in the code (e.g. `src/data/sports.ts`) and grows as new sports come up.
 - The form also takes an optional **Group image** (shown on the Group card and Group page) and an optional **Group banner** (shown across the top of the Group page). If either is left out, the default Group image (`public/logos/OGTC_OGoatG_KC.svg`) is used.
 - The Group Owner can edit their Group's info later, including replacing or removing the image and banner.
@@ -166,6 +169,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 - "Add your Group" on the Groups page, which asks Visitors to sign in first
 - The Groups page layout from design A is built (see [ARCHITECTURE.md](ARCHITECTURE.md)); its View Group, Join, and Add your Group buttons get wired up by **Group Pages**, **Joining**, and **Add a Group**
 - Design directions to choose from (photo cards, directory list, badge cards, plus the Group page banner): [Groups Page Designs](https://claude.ai/artifact/V31KU4Zmjb31sPajZsLQ6d)
+- Group page: design **G** is chosen (Next up + Calendar for Members, Group links, Owner toolbar strip). **Group Pages** built its public parts; the members-only and Owner parts are built with the features they depend on
 - Group page: clear split between public info and members-only content; placement of Join / Leave and the sign in / join prompt
 - Owner-only controls (edit Group, post Announcement, add Event) that don't clutter the Member view
 
@@ -199,7 +203,7 @@ Notification ──> User (recipient), Announcement | Event (source)
 | Entity | Key fields |
 | --- | --- |
 | **User** | id, display name, email, phone (optional), notification preferences, created at |
-| **Group** | id (slug), name, sport, city, state, country, description, website, tags, image (optional), banner (optional), owner (User), created at |
+| **Group** | id (slug), name, sport, city, state, country, description, tags, links (up to 3, each label + URL), image (optional), banner (optional), owner (User, required), created at |
 | **Membership** | user, group, role (`member` / `owner`, later maybe `admin`), joined at |
 | **Announcement** | id, group, author, title, body, created/updated at |
 | **Event** | id, group, author, title, description, location, starts at, ends at, cancelled |
@@ -229,7 +233,7 @@ Decide these before or while building the feature in brackets.
 1. **[Joining]** Can anyone join instantly, or does the Group Owner approve requests?
 2. **[Announcements / Events]** Can only the Owner post, or can they promote Members to co-admins?
 3. **[Add a Group]** Do new Groups appear immediately, or does a Site Admin approve them first? How do we handle duplicates and spam?
-4. **[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?
+4. ~~**[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?~~ Every Group has a required Owner. Existing Groups are owned by the Site Admin (`"site-admin"`) until claimed. How claiming works is decided with **Add a Group**.
 5. **[Accounts]** What happens to a Group if its Owner leaves or deletes their account? Can ownership transfer?
 6. **[Accounts]** Is the phone number required, optional, or only asked for if the User wants texts?
 7. **[Notifications]** Can Members choose a channel per Group, mute a Group, or get a digest instead of every post?

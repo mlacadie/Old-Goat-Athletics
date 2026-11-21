@@ -6,7 +6,7 @@ import { colors } from '../theme'
 
 export default function NotFound() {
   return (
-    <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 }, minHeight: '100vh' }}>
+    <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 } }}>
       <Container maxWidth="lg">
         <Stack spacing={1.5} sx={{ alignItems: 'center', textAlign: 'center' }}>
           <Typography
