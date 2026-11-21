@@ -13,8 +13,8 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | Issue | Feature | One-liner | Depends on | Status |
 | - | --- | --- | --- | --- |
 | #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | Done |
-| #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | In Progress |
-| #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Planned |
+| #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | Done |
+| #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Done |
 | #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Done |
 | #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
 | #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
@@ -58,10 +58,14 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 **What it is:** People can create an account and sign in. A signed-in person is a **User**; a signed-out one is a **Visitor**.
 
-- Sign up collects a display name plus the contact info used for Notifications: **email** and/or **phone number**.
+- Sign up collects an **email** (used for Notifications) and an optional first and last name. Users sign in with an email code, a password, or Google.
+- **Phone numbers are deferred past the January release.** Notifications start email-only; texts come later (see **Notifications**).
 - Sign in / sign out appears in the Header.
 - A simple **profile** where a User edits their name, contact info, and Notification preferences.
 - Everything browsable today stays browsable without an account.
+- Users who set no name show as "Member", never their email.
+
+**Built with:** Clerk for sign-in and the profile, and a Neon Postgres `users` table kept in sync by a Clerk webhook (details in [ARCHITECTURE.md](ARCHITECTURE.md)).
 
 **Done when:** a Visitor can sign up, sign out, sign back in, and edit their profile. The Header shows whether you're signed in.
 
@@ -224,7 +228,9 @@ From **Accounts** onward we also need:
 - **Server-side access control** for members-only content, enforced in Next.js server code and/or database rules.
 - **Email and SMS delivery** for Notifications.
 
-**Not decided yet:** which auth provider, database, and email/SMS services to use. We choose them when we start **Accounts**, favoring ones that work well with Next.js and Vercel.
+**Decided with Accounts:** **Clerk** for authentication and **Neon** Postgres (with Drizzle ORM) for the database, both through the Vercel Marketplace. Group images and banners will likely use **Vercel Blob** (decide with **Add a Group**).
+
+**Not decided yet:** which email/SMS services to use. Choose them with **Notifications**.
 
 ## Open questions
 
@@ -235,7 +241,7 @@ Decide these before or while building the feature in brackets.
 3. **[Add a Group]** Do new Groups appear immediately, or does a Site Admin approve them first? How do we handle duplicates and spam?
 4. ~~**[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?~~ Every Group has a required Owner. Existing Groups are owned by the Site Admin (`"site-admin"`) until claimed. How claiming works is decided with **Add a Group**.
 5. **[Accounts]** What happens to a Group if its Owner leaves or deletes their account? Can ownership transfer?
-6. **[Accounts]** Is the phone number required, optional, or only asked for if the User wants texts?
+6. ~~**[Accounts]** Is the phone number required, optional, or only asked for if the User wants texts?~~ Not collected for the January release. Revisit with **Notifications** when texts are added.
 7. **[Notifications]** Can Members choose a channel per Group, mute a Group, or get a digest instead of every post?
 8. **[Members-only Content]** Can a Member hide themselves from the Members list?
 9. **[Members-only Content]** Should non-members see a teaser, e.g. "3 upcoming Events, join to see"?

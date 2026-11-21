@@ -19,7 +19,6 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
-import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { UserButton, useAuth } from '@clerk/nextjs'
 import { colors } from '../../theme'
 import { NAV_LINKS } from '../../data/navLinks'
