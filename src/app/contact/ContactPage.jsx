@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import {
   Box,
@@ -11,7 +13,7 @@ import {
   Alert,
 } from '@mui/material'
 import MailIcon from '@mui/icons-material/Mail'
-import { colors } from '../theme.js'
+import { colors } from '../../theme.js'
 
 // Replace with your real Formspree endpoint after creating a form at https://formspree.io
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/your-form-id'

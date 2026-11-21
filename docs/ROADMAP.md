@@ -12,7 +12,8 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 
 | Issue | Feature | One-liner | Depends on | Status |
 | - | --- | --- | --- | --- |
-| #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | Planned |
+| #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | In Progress |
+| #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | Planned |
 | #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Planned |
 | #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Planned |
 | #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
@@ -25,7 +26,7 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #10 | **Group View Redesign** | Redesign the Groups page and Group page for Members and Owners | Group Pages | Planned |
 | #11 | **Shopify Store** | Replace the Merch placeholder with a real store | – | Planned |
 
-**Suggested build order:** Next.js Migration → Group Pages → Accounts → Add a Group → Joining → Members-only Content → Announcements → Events & Calendar → Notifications. **Group View Redesign** and **Site Redesign** follow the features they depend on. **Shopify Store** can happen any time after the migration.
+**Suggested build order:** Next.js Migration → TypeScript → Group Pages → Accounts → Add a Group → Joining → Members-only Content → Announcements → Events & Calendar → Notifications. **Group View Redesign** and **Site Redesign** follow the features they depend on. **Shopify Store** can happen any time after the migration.
 
 When a feature ships, change its status here, close its issue, and remove the **(planned)** marker from its terms in the glossary.
 
@@ -41,6 +42,15 @@ When a feature ships, change its status here, close its issue, and remove the **
 - Vercel deploys `main` to production and gives every pull request a preview link
 
 **Done when:** the live site runs on Vercel from Next.js, looks the same as before, and GitHub Pages is switched off.
+
+## 0b. TypeScript
+
+**What it is:** Convert every `.js`/`.jsx` file to `.ts`/`.tsx` with `strict` type checking, on its own branch and pull request after the Next.js Migration merges. No behavior or design changes.
+
+- Types for Group data matching the data model below
+- Typed theme, nav links, and component props
+
+**Done when:** no JavaScript source files remain, the build type-checks with `strict`, and React Doctor scores 100/100.
 
 ---
 
@@ -220,6 +230,6 @@ Decide these before or while building the feature in brackets.
 8. **[Members-only Content]** Can a Member hide themselves from the Members list?
 9. **[Members-only Content]** Should non-members see a teaser, e.g. "3 upcoming Events, join to see"?
 10. **[Events & Calendar]** Do Events need recurring schedules, RSVPs, or reminder Notifications before they start?
-11. **[Next.js Migration]** Is there a custom domain to move from GitHub Pages to Vercel?
+11. ~~**[Next.js Migration]** Is there a custom domain to move?~~ No domain yet; the site uses its Vercel URL for now.
 12. **[Shopify Store]** Does the Shopify store already exist? Link out or show products on the site? Do Members get perks?
 13. **[Site Redesign]** Should signed-in Users get a different Home page?

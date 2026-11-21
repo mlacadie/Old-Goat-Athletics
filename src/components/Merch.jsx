@@ -16,7 +16,7 @@ export default function Merch() {
     >
       <Box
         component="img"
-        src={`${import.meta.env.BASE_URL}logos/OG_Horns.svg`}
+        src="/logos/OG_Horns.svg"
         alt=""
         aria-hidden="true"
         sx={{

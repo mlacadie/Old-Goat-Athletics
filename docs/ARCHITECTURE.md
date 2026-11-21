@@ -2,39 +2,52 @@
 
 How the site works **today**. For planned changes see [ROADMAP.md](ROADMAP.md); for terms see [GLOSSARY.md](GLOSSARY.md).
 
-> **Planned change:** the site is moving to **Next.js on Vercel** (Next.js Migration, issue #12). Until that ships, everything below is accurate. When it does, rewrite this file for the new setup: routes become folders under `app/`, there is no React Router, and Vercel replaces the GitHub Pages workflow.
-
 ## Stack
 
-- **React 19** + **Vite** single-page app
-- **MUI** (Material UI) for components, styled with the `sx` prop
-- **React Router** for client-side routing
-- **Yarn 4** package manager, **Oxlint** for linting
-- **Hosting:** GitHub Pages. Pushing to `main` runs [.github/workflows/deploy.yml](../.github/workflows/deploy.yml), which builds and deploys `dist/`.
+- **Next.js 16** (App Router) + **React 19**, written in JavaScript (TypeScript is planned: issue #13)
+- **MUI** (Material UI) for components, styled with the `sx` prop. Wired into Next.js with `@mui/material-nextjs` so styles are rendered on the server.
+- **Yarn 4** package manager, **Oxlint** for linting, **React Doctor** for React health checks
+- **Hosting:** Vercel. Pushes to `main` deploy to production; every pull request gets a preview deployment.
 
-There is no backend, database, or user accounts. All content is in the source code.
+There is no backend, database, or user accounts yet. All content is in the source code, and every page is prerendered as static HTML at build time.
 
 ## Routes
 
-Defined in [src/App.jsx](../src/App.jsx). Every page is wrapped by the Header and Footer.
+Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [layout.jsx](../src/app/layout.jsx), which renders the Header, the page, and the Footer.
 
-| Path | Page | Notes |
+| Path | Files | Notes |
 | --- | --- | --- |
-| `/` | [Home](../src/pages/Home.jsx) | Stacked Sections. Supports scrolling to a section via router state (used by the Socials nav link). |
-| `/groups` | [Groups](../src/pages/Groups.jsx) | Directory of Groups with sport and state filters. Cards link out to each Group's own website. |
-| `/contact` | [Contact](../src/pages/Contact.jsx) | Form posted to Formspree. The endpoint is still a placeholder. |
-| `*` | Home | Fallback for unknown paths. |
+| `/` | [app/page.jsx](../src/app/page.jsx) | Stacked Home page Sections from `src/components/`. |
+| `/groups` | [app/groups/](../src/app/groups/) | Directory of Groups with sport and state filters. Cards link out to each Group's own website. |
+| `/contact` | [app/contact/](../src/app/contact/) | Form posted to Formspree. The endpoint is still a placeholder. |
+| anything else | [app/not-found.jsx](../src/app/not-found.jsx) | 404 page with a link home. |
+
+**Pattern:** `page.jsx` is a server component that exports `metadata` (page title and description) and renders the page's client component (e.g. `GroupsPage.jsx`), which holds the interactive UI.
+
+## Server vs. client components
+
+- Files starting with `'use client'` run in the browser too. Anything with state, effects, event handlers, or `component={Link}` needs it.
+- Files without it are server components (the `page.jsx` files, `layout.jsx`, and simple Sections like Mission, Merch, Socials).
+- [ThemeRegistry.jsx](../src/components/ThemeRegistry.jsx) provides the MUI theme and CSS baseline to the whole app.
+
+## Navigation
+
+- Internal links use Next.js `Link` (`component={Link}` on MUI components).
+- Nav links live in [src/data/navLinks.js](../src/data/navLinks.js) as `{ label, href }`. Links to a Home page Section use a hash, e.g. `/#socials`. Smooth scrolling comes from `scroll-behavior: smooth` in [globals.css](../src/app/globals.css).
 
 ## Folders
 
 ```
+public/         Static files served from the site root (logos/, team.png)
 src/
-  pages/        One component per route
-  components/   Header, Footer, and the Home page Sections
+  app/          Next.js routes: layout, pages, 404, global CSS
+  components/   Header, Footer, ThemeRegistry, and the Home page Sections
   data/         Static content: clubs.json (Groups), navLinks.js
   icons/        Custom icons not in MUI
   theme.js      Brand colors (`colors`) and MUI theme
 ```
+
+Don't create `src/pages/`: Next.js would treat it as the old Pages Router.
 
 ## Group data
 
@@ -54,6 +67,12 @@ Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Adding
 }
 ```
 
-## Working conventions
+## Checks (required before work is done)
 
-- Check changes with `yarn build` (and `yarn lint`). The site owner runs the dev server themselves.
+| Command | Must be |
+| --- | --- |
+| `yarn build` | succeeds |
+| `yarn lint` | no errors or warnings |
+| `yarn doctor` | **100 / 100** |
+
+The site owner runs the dev server (`yarn dev`) themselves.

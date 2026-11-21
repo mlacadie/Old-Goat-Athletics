@@ -13,7 +13,7 @@ body {
   scroll-behavior: smooth;
 }
 
-#root {
+body {
   min-height: 100svh;
   overflow-x: clip;
 }

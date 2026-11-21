@@ -1,5 +1,7 @@
+'use client'
+
 import { Box, Container, Grid, Typography, Button, Stack, Paper } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import Link from 'next/link'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import { colors } from '../theme.js'
@@ -29,7 +31,7 @@ export default function Community() {
             >
               <Box
                 component="img"
-                src={`${import.meta.env.BASE_URL}team.png`}
+                src="/team.png"
                 alt="Old Goat Track Club"
                 sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
@@ -86,8 +88,8 @@ export default function Community() {
                 <Button
                   size="large"
                   variant="outlined"
-                  component={RouterLink}
-                  to="/groups"
+                  component={Link}
+                  href="/groups"
                   sx={{ color: colors.navy, borderColor: colors.navy }}
                 >
                   Browse all clubs

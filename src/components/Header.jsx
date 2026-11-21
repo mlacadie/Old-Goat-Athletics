@@ -1,5 +1,8 @@
+'use client'
+
 import { useState } from 'react'
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   AppBar,
   Toolbar,
@@ -20,6 +23,23 @@ import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { colors } from '../theme.js'
 import { NAV_LINKS } from '../data/navLinks.js'
 
+const navButtonSx = {
+  color: 'rgba(255,255,255,0.88)',
+  px: 1.75,
+  fontWeight: 600,
+  borderRadius: 2,
+  '&:hover': {
+    color: '#fff',
+    bgcolor: 'rgba(255,255,255,0.08)',
+  },
+}
+
+const drawerTextProps = {
+  primary: {
+    sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
+  },
+}
+
 function HideOnScroll({ children }) {
   const trigger = useScrollTrigger()
   return (
@@ -32,19 +52,9 @@ function HideOnScroll({ children }) {
 export default function Header() {
   const [open, setOpen] = useState(false)
   const scrollTriggered = useScrollTrigger({ disableHysteresis: true, threshold: 8 })
-  const location = useLocation()
-  const navigate = useNavigate()
-  const scrolled = scrollTriggered || location.pathname !== '/'
-
-  const handleAnchorClick = (href) => (event) => {
-    event.preventDefault()
-    setOpen(false)
-    if (location.pathname === '/') {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      navigate('/', { state: { scrollTo: href } })
-    }
-  }
+  const pathname = usePathname()
+  const scrolled = scrollTriggered || pathname !== '/'
+  const closeMenu = () => setOpen(false)
 
   return (
     <HideOnScroll>
@@ -61,9 +71,9 @@ export default function Header() {
         <Box sx={{ px: { xs: 2, md: 8 } }}>
           <Toolbar disableGutters sx={{ py: 1, gap: 2 }}>
             <Box
-              component="a"
-              href="#top"
-              onClick={handleAnchorClick('#top')}
+              component={Link}
+              href="/#top"
+              aria-label="Old Goat Athletics home"
               sx={{
                 display: 'flex',
                 alignItems: 'flex-end',
@@ -74,7 +84,7 @@ export default function Header() {
             >
               <Box
                 component="img"
-                src={`${import.meta.env.BASE_URL}logos/oldGoat.svg`}
+                src="/logos/oldGoat.svg"
                 alt=""
                 sx={{
                   width: 55,
@@ -106,45 +116,11 @@ export default function Header() {
                 ml: 'auto',
               }}
             >
-              {NAV_LINKS.map((link) =>
-                link.type === 'route' ? (
-                  <Button
-                    key={link.to}
-                    component={RouterLink}
-                    to={link.to}
-                    sx={{
-                      color: 'rgba(255,255,255,0.88)',
-                      px: 1.75,
-                      fontWeight: 600,
-                      borderRadius: 2,
-                      '&:hover': {
-                        color: '#fff',
-                        bgcolor: 'rgba(255,255,255,0.08)',
-                      },
-                    }}
-                  >
-                    {link.label}
-                  </Button>
-                ) : (
-                  <Button
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleAnchorClick(link.href)}
-                    sx={{
-                      color: 'rgba(255,255,255,0.88)',
-                      px: 1.75,
-                      fontWeight: 600,
-                      borderRadius: 2,
-                      '&:hover': {
-                        color: '#fff',
-                        bgcolor: 'rgba(255,255,255,0.08)',
-                      },
-                    }}
-                  >
-                    {link.label}
-                  </Button>
-                )
-              )}
+              {NAV_LINKS.map((link) => (
+                <Button key={link.href} component={Link} href={link.href} sx={navButtonSx}>
+                  {link.label}
+                </Button>
+              ))}
               <Button
                 href="https://ogtc.net/index.html"
                 target="_blank"
@@ -178,7 +154,7 @@ export default function Header() {
         <Drawer
           anchor="right"
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={closeMenu}
           slotProps={{
             paper: {
               sx: { bgcolor: colors.navyDarker, width: 280 },
@@ -186,40 +162,18 @@ export default function Header() {
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1.5 }}>
-            <IconButton onClick={() => setOpen(false)} sx={{ color: '#fff' }} aria-label="Close menu">
+            <IconButton onClick={closeMenu} sx={{ color: '#fff' }} aria-label="Close menu">
               <CloseIcon />
             </IconButton>
           </Box>
           <List>
-            {NAV_LINKS.map((link) =>
-              link.type === 'route' ? (
-                <ListItem key={link.to} disablePadding>
-                  <ListItemButton component={RouterLink} to={link.to} onClick={() => setOpen(false)}>
-                    <ListItemText
-                      primary={link.label}
-                      slotProps={{
-                        primary: {
-                          sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
-                        },
-                      }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ) : (
-                <ListItem key={link.href} disablePadding>
-                  <ListItemButton onClick={handleAnchorClick(link.href)}>
-                    <ListItemText
-                      primary={link.label}
-                      slotProps={{
-                        primary: {
-                          sx: { color: '#fff', fontWeight: 700, fontSize: '1.1rem' },
-                        },
-                      }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              )
-            )}
+            {NAV_LINKS.map((link) => (
+              <ListItem key={link.href} disablePadding>
+                <ListItemButton component={Link} href={link.href} onClick={closeMenu}>
+                  <ListItemText primary={link.label} slotProps={drawerTextProps} />
+                </ListItemButton>
+              </ListItem>
+            ))}
             <ListItem disablePadding sx={{ mt: 1 }}>
               <ListItemButton
                 component="a"
