@@ -23,6 +23,6 @@ export default async function Page({ params }: Props) {
   const group = getGroup((await params).groupId)
   if (!group) notFound()
 
-  const role = getGroupRole(group, getCurrentUser())
+  const role = getGroupRole(group, await getCurrentUser())
   return <GroupPage group={group} role={role} />
 }

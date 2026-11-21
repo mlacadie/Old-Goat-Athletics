@@ -121,6 +121,64 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@clerk/backend@npm:^3.31.4":
+  version: 3.31.4
+  resolution: "@clerk/backend@npm:3.31.4"
+  dependencies:
+    "@clerk/shared": "npm:^4.48.3"
+    standardwebhooks: "npm:^1.0.0"
+  checksum: 10c0/cb9f3111264cf1d2c3312d48445da010b1e73abe74eaf93533e99034e286213886f7711b3eb84a700a014ef37c2fca53d690256ef2bb2dd46b01845cce24174f
+  languageName: node
+  linkType: hard
+
+"@clerk/nextjs@npm:^7.10.7":
+  version: 7.10.7
+  resolution: "@clerk/nextjs@npm:7.10.7"
+  dependencies:
+    "@clerk/backend": "npm:^3.31.4"
+    "@clerk/react": "npm:^6.19.4"
+    "@clerk/shared": "npm:^4.48.3"
+    server-only: "npm:0.0.1"
+  peerDependencies:
+    next: ^15.2.8 || ^15.3.8 || ^15.4.10 || ^15.5.9 || ^15.6.0-0 || ^16.0.10 || ^16.1.0-0
+    react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+    react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+  checksum: 10c0/729e1ee1f160f5640abbaf6bec02070b8354d6a6c6128e7ac70ca51a17de74f7c9a6b55f12791697b8916eb9970f777e07859932c58ad9028c3333a350c4b9f7
+  languageName: node
+  linkType: hard
+
+"@clerk/react@npm:^6.19.4":
+  version: 6.19.4
+  resolution: "@clerk/react@npm:6.19.4"
+  dependencies:
+    "@clerk/shared": "npm:^4.48.3"
+  peerDependencies:
+    react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+    react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+  checksum: 10c0/7b38b602b441f8d594368b6df4f6e4eb60f1b05e335df589fd96a7ebe33343ab290b7c4ac4ae95f941195a42c76634cdb2ffba2a458167683a8b0490bd8050c3
+  languageName: node
+  linkType: hard
+
+"@clerk/shared@npm:^4.48.3":
+  version: 4.48.3
+  resolution: "@clerk/shared@npm:4.48.3"
+  dependencies:
+    "@tanstack/query-core": "npm:^5.101.4"
+    dequal: "npm:2.0.3"
+    glob-to-regexp: "npm:0.4.1"
+    js-cookie: "npm:3.0.8"
+  peerDependencies:
+    react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+    react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/d7e0c9864e2ffbd70f44a612cd24ddd9938a18813f06f348bd808e089916d913294a9dad284095c7357b599308631040df1b6411c1cca3a16359e9e669d254d1
+  languageName: node
+  linkType: hard
+
 "@emnapi/runtime@npm:^1.11.3":
   version: 1.11.3
   resolution: "@emnapi/runtime@npm:1.11.3"
@@ -956,12 +1014,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stablelib/base64@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@stablelib/base64@npm:1.0.1"
+  checksum: 10c0/6330720f021819d19cecfe274111b79a256caa81df478d6b0ae7effc8842b96915b6aeed85926ff05b4d48ec1fc78ad043d928b730ee4e6cc6e8cba6aa097bed
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.5.23":
   version: 0.5.23
   resolution: "@swc/helpers@npm:0.5.23"
   dependencies:
     tslib: "npm:^2.8.0"
   checksum: 10c0/02da7b4df465693933ecd4851cc193ec729c309939c8a84eccae5ec0010aafc3894e713b8ef8d13a6ba401759f0e900c88e2dcfef5872c27bb91e70f73275cce
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:^5.101.4":
+  version: 5.108.2
+  resolution: "@tanstack/query-core@npm:5.108.2"
+  checksum: 10c0/22f5618cfd98858cd7ec47900992c505b287fde162edebcbf4448647194ff9330080b8911e2a2670e5f4f6ea1bd867a56071596f418977c5d2482cf4f710d90a
   languageName: node
   linkType: hard
 
@@ -1102,6 +1174,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dequal@npm:2.0.3":
+  version: 2.0.3
+  resolution: "dequal@npm:2.0.3"
+  checksum: 10c0/f98860cdf58b64991ae10205137c0e97d384c3a4edc7f807603887b7c4b850af1224a33d88012009f150861cbee4fa2d322c4cc04b9313bee312e47f6ecaa888
+  languageName: node
+  linkType: hard
+
 "detect-libc@npm:^2.1.2":
   version: 2.1.2
   resolution: "detect-libc@npm:2.1.2"
@@ -1142,6 +1221,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-sha256@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "fast-sha256@npm:1.3.0"
+  checksum: 10c0/87f9e4baa7639576cf60a2b6235c9f436e1a1c52323abbd8a705b5bea8355500acf176f2aed0c14f2ecd6d6007e26151461bab2f27b8953bcca8d9d6b76a86e4
+  languageName: node
+  linkType: hard
+
 "find-root@npm:^1.1.0":
   version: 1.1.0
   resolution: "find-root@npm:1.1.0"
@@ -1153,6 +1239,13 @@ __metadata:
   version: 1.1.2
   resolution: "function-bind@npm:1.1.2"
   checksum: 10c0/d8680ee1e5fcd4c197e4ac33b2b4dce03c71f4d91717292785703db200f5c21f977c568d28061226f9b5900cbcd2c84463646134fd5337e7925e0942bc3f46d5
+  languageName: node
+  linkType: hard
+
+"glob-to-regexp@npm:0.4.1":
+  version: 0.4.1
+  resolution: "glob-to-regexp@npm:0.4.1"
+  checksum: 10c0/0486925072d7a916f052842772b61c3e86247f0a80cc0deb9b5a3e8a1a9faad5b04fb6f58986a09f34d3e96cd2a22a24b7e9882fb1cf904c31e9a310de96c429
   languageName: node
   linkType: hard
 
@@ -1197,6 +1290,13 @@ __metadata:
   dependencies:
     hasown: "npm:^2.0.4"
   checksum: 10c0/3dc7c15ea42f846180cd2cdd57af62270e0a8d0ed31c17c85735d554089d39975e2e82e65fc7c8280a3c476ca3d0d09992d0860b4998abb769a277341feb6698
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:3.0.8":
+  version: 3.0.8
+  resolution: "js-cookie@npm:3.0.8"
+  checksum: 10c0/421912a4a55535bda32b3059835864e1182c3af5b4516df00a060edc1fa5a53d38bb8d5a91d5d305e396206f4fd11e829f17850aa5aa8164118c04d8ebf1ff5d
   languageName: node
   linkType: hard
 
@@ -1328,6 +1428,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "old-goat-athletics@workspace:."
   dependencies:
+    "@clerk/nextjs": "npm:^7.10.7"
     "@emotion/cache": "npm:^11.14.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
@@ -1343,7 +1444,7 @@ __metadata:
     oxlint: "npm:^1.81.0"
     react: "npm:^19.2.8"
     react-dom: "npm:^19.2.8"
-    typescript: "npm:^6"
+    typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
 
@@ -1585,6 +1686,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"server-only@npm:0.0.1":
+  version: 0.0.1
+  resolution: "server-only@npm:0.0.1"
+  checksum: 10c0/4704f0ef85da0be981af6d4ed8e739d39bcfd265b9c246a684060acda5642d0fdc6daffc2308e71e2682c5f508090978802eae0a77623c9b90a49f9ae68048d6
+  languageName: node
+  linkType: hard
+
 "sharp@npm:^0.35.5":
   version: 0.35.5
   resolution: "sharp@npm:0.35.5"
@@ -1689,6 +1797,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"standardwebhooks@npm:^1.0.0":
+  version: 1.3.0
+  resolution: "standardwebhooks@npm:1.3.0"
+  dependencies:
+    "@stablelib/base64": "npm:^1.0.0"
+    fast-sha256: "npm:^1.3.0"
+  checksum: 10c0/46d3239465fb3f7dfb6c90a28334e3ca1867aa16837b8a12e2f6f6d9cef387b32f7475ea04f08f553fce014d4c98387ddd6c38c6fa7b618024414a6148ef16af
+  languageName: node
+  linkType: hard
+
 "styled-jsx@npm:5.1.6":
   version: 5.1.6
   resolution: "styled-jsx@npm:5.1.6"
@@ -1726,7 +1844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^6":
+"typescript@npm:^6.0.3":
   version: 6.0.3
   resolution: "typescript@npm:6.0.3"
   bin:
@@ -1736,7 +1854,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^6#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^6.0.3#optional!builtin<compat/typescript>":
   version: 6.0.3
   resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:

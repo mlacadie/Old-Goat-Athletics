@@ -1,3 +1,4 @@
+import { currentUser } from '@clerk/nextjs/server'
 import type { Group } from '../types/group'
 import type { User } from '../types/user'
 
@@ -8,9 +9,15 @@ import type { User } from '../types/user'
  */
 export type GroupRole = 'visitor' | 'user' | 'member' | 'owner'
 
-/** The signed-in User, or null for a Visitor. Always null until Accounts ships. */
-export function getCurrentUser(): User | null {
-  return null
+/** Shown in place of a name for Users who haven't set one. Never fall back to contact info. */
+const UNNAMED_USER = 'Member'
+
+/** The signed-in User, or null for a Visitor. */
+export async function getCurrentUser(): Promise<User | null> {
+  const clerkUser = await currentUser()
+  if (!clerkUser) return null
+  const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ')
+  return { id: clerkUser.id, displayName: name || UNNAMED_USER }
 }
 
 export function getGroupRole(group: Group, user: User | null): GroupRole {
