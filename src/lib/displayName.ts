@@ -1,5 +1,5 @@
 /** Shown in place of a name for Users who haven't set one. Never fall back to contact info. */
-const UNNAMED_USER = 'Member'
+const UNNAMED_USER = 'Old Goat'
 
 /** How a User is shown to others: their first and last name, or a placeholder. */
 export function getDisplayName(firstName: string | null, lastName: string | null): string {

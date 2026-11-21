@@ -97,7 +97,7 @@ Every Group has an Owner. Groups listed before Accounts existed are owned by the
 - **Clerk owns sign-in.** Users sign in with an email code, a password, or Google (switched on in the Clerk dashboard, not in code). Names are Clerk's optional first and last name. [layout.tsx](../src/app/layout.tsx) wraps the app in `<ClerkProvider>`, which points at our `/sign-in` and `/sign-up` pages and styles Clerk's forms with the theme's navy, font, and corner radius.
 - **[proxy.ts](../src/proxy.ts)** runs Clerk on every request. Every page is public except those in `isUserOnlyRoute` (currently `/profile`), which send Visitors to sign in.
 - **Header:** Visitors get **Sign in** (and **Sign up** in the mobile menu); signed-in Users get Clerk's `<UserButton>` avatar menu with Profile and Sign out. It uses Clerk's `useAuth()` because the Header is a client component.
-- **Display name:** first and last name, or `"Member"` if neither is set. Never fall back to the email: the Members list must not show contact info. Lives in `getDisplayName()` in [displayName.ts](../src/lib/displayName.ts).
+- **Display name:** first and last name, or `"Old Goat"` if neither is set. Never fall back to the email: the Members list must not show contact info. Lives in `getDisplayName()` in [displayName.ts](../src/lib/displayName.ts).
 - **Phone numbers** are not collected yet (deferred past the January release), so Notifications are email-only.
 
 ## Database

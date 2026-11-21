@@ -63,7 +63,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 - Sign in / sign out appears in the Header.
 - A simple **profile** where a User edits their name, contact info, and Notification preferences.
 - Everything browsable today stays browsable without an account.
-- Users who set no name show as "Member", never their email.
+- Users who set no name show as "Old Goat", never their email.
 
 **Built with:** Clerk for sign-in and the profile, and a Neon Postgres `users` table kept in sync by a Clerk webhook (details in [ARCHITECTURE.md](ARCHITECTURE.md)).
 

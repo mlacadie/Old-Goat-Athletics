@@ -51,7 +51,7 @@ This describes the site we are building toward, not only what exists today. Term
 | **Sign up** | Creating an account at `/sign-up` (email code, password, or Google). Collects the email used for Notifications and an optional first and last name. Phone numbers come later. |
 | **Sign in / Sign out** | Starting and ending a session. "Signed in" = User, "signed out" = Visitor. |
 | **Profile** | `/profile`, where a User edits their name, email, password, and Notification preferences. |
-| **Display name** | How a User is shown to others: their first and last name, or "Member" if they set none. Never their email or other contact info. |
+| **Display name** | How a User is shown to others: their first and last name, or "Old Goat" if they set none. Never their email or other contact info. |
 
 ## Notifications (planned)
 
