@@ -69,8 +69,9 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 **What it is:** Every Group gets its own page at `/groups/:groupId` (e.g. `/groups/old-goat-track-club`), using the Group's existing `id` slug.
 
-- Clicking a Group card on the Groups page opens its Group page. The external website link moves onto the Group page instead of being the card's main action.
+- The Group card's "Visit Site" button is removed. Cards get a **View Group** button that opens the Group page; the external website link moves onto the Group page. (Cards also get a **Join** button once **Joining** exists.)
 - The Group page shows **public info**: name, sport, location, description, website, tags.
+- The Group page has a banner across the top: the Group banner if one exists (from **Add a Group**), otherwise a branded banner using the default Group image (`public/logos/OGTC_OGoatG_KC.svg`).
 - Space is reserved for members-only content (filled in by later features).
 - Unknown Group ids show a friendly "Group not found" page.
 
@@ -82,7 +83,8 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 - An "Add your Group" button on the Groups page. Visitors who click it are asked to sign in first.
 - The form uses the same fields the Groups page already uses: name, sport, city, state, country, description, website, tags.
-- The Group Owner can edit their Group's info later.
+- The form also takes an optional **Group image** (shown on the Group card and Group page) and an optional **Group banner** (shown across the top of the Group page). If either is left out, the default Group image (`public/logos/OGTC_OGoatG_KC.svg`) is used.
+- The Group Owner can edit their Group's info later, including replacing or removing the image and banner.
 - New Groups appear on the Groups page with the existing ones.
 
 **Done when:** a User can add a Group, see it on the Groups page, open its Group page, and edit it.
@@ -91,7 +93,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 **What it is:** A User can **join** a Group and become a **Member**. Membership is per Group.
 
-- A **Join** button on the Group page. Visitors are asked to sign in first.
+- A **Join** button on the Group page and on each Group card. Visitors are asked to sign in first.
 - Members see a **Leave** button instead.
 - Joining a Group also turns on its Notifications. Join and subscribe are the same action.
 - A User can see the Groups they've joined (e.g. "My Groups" on their profile).
@@ -159,7 +161,9 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 **What it is:** Redesign the **Groups page** and the **Group page** so they hold up once Groups have Members, Announcements, and Events.
 
-- Group cards: member count, next Event, "Joined" badge; search alongside sport/state filters; works with many Groups
+- Group cards: Group image (or default), View Group and Join buttons, member count, next Event, "Joined" badge; search alongside sport/state filters; works with many Groups
+- "Add your Group" on the Groups page, which asks Visitors to sign in first
+- Design directions to choose from (photo cards, directory list, badge cards, plus the Group page banner): [Groups Page Designs](https://claude.ai/artifact/V31KU4Zmjb31sPajZsLQ6d)
 - Group page: clear split between public info and members-only content; placement of Join / Leave and the sign in / join prompt
 - Owner-only controls (edit Group, post Announcement, add Event) that don't clutter the Member view
 
@@ -193,13 +197,13 @@ Notification ──> User (recipient), Announcement | Event (source)
 | Entity | Key fields |
 | --- | --- |
 | **User** | id, display name, email, phone (optional), notification preferences, created at |
-| **Group** | id (slug), name, sport, city, state, country, description, website, tags, owner (User), created at |
+| **Group** | id (slug), name, sport, city, state, country, description, website, tags, image (optional), banner (optional), owner (User), created at |
 | **Membership** | user, group, role (`member` / `owner`, later maybe `admin`), joined at |
 | **Announcement** | id, group, author, title, body, created/updated at |
 | **Event** | id, group, author, title, description, location, starts at, ends at, cancelled |
 | **Notification** | id, recipient, source (Announcement/Event), channel, sent at, status |
 
-Group fields deliberately match today's [clubs.json](../src/data/clubs.json) so existing Groups can move straight into the database.
+Group fields deliberately match today's [clubs.json](../src/data/clubs.json) so existing Groups can move straight into the database. `image` and `banner` are new and optional, so existing Groups start with the default Group image.
 
 ## Technical direction
 
@@ -233,3 +237,4 @@ Decide these before or while building the feature in brackets.
 11. ~~**[Next.js Migration]** Is there a custom domain to move?~~ No domain yet; the site uses its Vercel URL for now.
 12. **[Shopify Store]** Does the Shopify store already exist? Link out or show products on the site? Do Members get perks?
 13. **[Site Redesign]** Should signed-in Users get a different Home page?
+14. **[Add a Group]** Where are uploaded Group images and banners stored, and what are the limits (file types, max size, crop or aspect ratio)? Do they need moderation?

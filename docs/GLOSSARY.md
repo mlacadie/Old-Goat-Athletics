@@ -22,9 +22,12 @@ This describes the site we are building toward, not only what exists today. Term
 | --- | --- |
 | **Group** | A club, team, or crew listed on the site (e.g. "Old Goat Track Club"). This is the canonical term. In code, Groups are currently stored as `clubs` in [src/data/clubs.json](../src/data/clubs.json); "club" and "group" mean the same thing. |
 | **Groups page** | The directory at `/groups` that lists every Group as a card, with sport and state filters. |
-| **Group card** | One Group's tile on the Groups page. |
-| **Group page** **(planned)** | A page dedicated to a single Group (e.g. `/groups/old-goat-track-club`), opened by clicking its Group card. |
-| **Public info** | The parts of a Group anyone can see: name, sport, location, description, website, tags. |
+| **Group card** | One Group's tile on the Groups page. Today it has a "Visit Site" button that links to the Group's website. **(planned)** It shows the Group image and has two actions instead: **View Group** (opens the Group page) and **Join**. The website link moves to the Group page. |
+| **Group page** **(planned)** | A page dedicated to a single Group (e.g. `/groups/old-goat-track-club`), opened from its Group card. Can show the Group banner across the top. |
+| **Group image** **(planned)** | A picture the Group Owner uploads when adding or editing a Group. Shown on the Group card and the Group page. Optional: without one, the default Group image is used. |
+| **Group banner** **(planned)** | An optional wide image the Group Owner uploads, shown across the top of the Group page. Without one, the Group page uses a plain branded banner with the default Group image. |
+| **Default Group image** **(planned)** | The fallback when a Group has no Group image or Group banner: the Old Goat logo at [public/logos/OGTC_OGoatG_KC.svg](../public/logos/OGTC_OGoatG_KC.svg). |
+| **Public info** | The parts of a Group anyone can see: name, sport, location, description, website, tags, and (planned) the Group image and Group banner. |
 | **Members-only content** **(planned)** | The parts of a Group page only Members can see: Announcements, Events/Calendar, and the Members list. |
 | **Join** **(planned)** | The action a User takes to become a Member of a Group. Joining also subscribes them to that Group's Notifications. We use "join" rather than "subscribe" in the UI and code. |
 | **Leave** **(planned)** | The opposite of Join. Stops membership and Notifications. |
