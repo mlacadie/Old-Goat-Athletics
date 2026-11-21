@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import Link from 'next/link'
 import {
   Box,
   Container,
@@ -10,134 +9,156 @@ import {
   Button,
   Stack,
   Paper,
-  Chip,
-  ToggleButton,
-  ToggleButtonGroup,
   Select,
   MenuItem,
   InputLabel,
   FormControl,
+  TextField,
+  InputAdornment,
 } from '@mui/material'
-import NorthEastIcon from '@mui/icons-material/NorthEast'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
+import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import { colors } from '../../theme'
 import { GROUPS } from '../../data/groups'
+import type { Group } from '../../types/group'
+import GroupCard from './GroupCard'
+import SportPills from './SportPills'
 
 const ALL = 'All'
 
-export default function Groups() {
+const SPORTS = [ALL, ...new Set(GROUPS.map((group) => group.sport).filter(Boolean))]
+const STATES = [ALL, ...new Set(GROUPS.map((group) => group.state).filter(Boolean))]
+
+function matchesSearch(group: Group, query: string) {
+  if (!query) return true
+  const haystack = [group.name, group.sport, group.city, group.state, ...group.tags]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+  return haystack.includes(query)
+}
+
+export default function GroupsPage() {
   const [sport, setSport] = useState(ALL)
   const [state, setState] = useState(ALL)
+  const [search, setSearch] = useState('')
 
-  const sports = useMemo(
-    () => [ALL, ...new Set(GROUPS.map((group) => group.sport).filter(Boolean))],
-    []
-  )
-  const states = useMemo(
-    () => [ALL, ...new Set(GROUPS.map((group) => group.state).filter(Boolean))],
-    []
-  )
+  const query = search.trim().toLowerCase()
 
   const filtered = useMemo(
     () =>
       GROUPS.filter(
-        (group) => (sport === ALL || group.sport === sport) && (state === ALL || group.state === state)
+        (group) =>
+          (sport === ALL || group.sport === sport) &&
+          (state === ALL || group.state === state) &&
+          matchesSearch(group, query)
       ),
-    [sport, state]
+    [sport, state, query]
   )
 
-  const hasActiveFilters = sport !== ALL || state !== ALL
+  const hasActiveFilters = sport !== ALL || state !== ALL || query !== ''
+
+  const clearFilters = () => {
+    setSport(ALL)
+    setState(ALL)
+    setSearch('')
+  }
 
   return (
     <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 }, minHeight: '100vh' }}>
       <Container maxWidth="lg">
-        <Stack spacing={1.5} sx={{ alignItems: 'center', textAlign: 'center', mb: 6 }}>
-          <Typography
-            sx={{
-              color: colors.navy,
-              fontWeight: 700,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              fontSize: '0.85rem',
-            }}
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={3}
+          sx={{ alignItems: { xs: 'flex-start', md: 'flex-end' }, mb: 4.5 }}
+        >
+          <Stack spacing={1.25} sx={{ flexGrow: 1 }}>
+            <Typography
+              sx={{
+                color: colors.navy,
+                fontWeight: 700,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                fontSize: '0.85rem',
+              }}
+            >
+              Find Your Crew
+            </Typography>
+            <Typography
+              variant="h1"
+              sx={{ fontSize: { xs: '2.6rem', md: '3.2rem' }, color: colors.navyDarker }}
+            >
+              Groups
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', maxWidth: 520, fontSize: '1.05rem' }}>
+              Clubs, teams, and crews for Old Goats such as yourself. Find one near you, or add your own.
+            </Typography>
+          </Stack>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{ flexShrink: 0, bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
           >
-            Find Your Crew
-          </Typography>
-          <Typography
-            variant="h2"
-            sx={{ fontSize: { xs: '2.2rem', md: '2.8rem' }, color: colors.navyDarker }}
-          >
-            Groups &amp; Clubs
-          </Typography>
-          <Typography sx={{ color: 'text.secondary', maxWidth: 560, fontSize: '1.05rem' }}>
-            A directory of clubs for former college athletes staying competitive and active.
-          </Typography>
+            Add your Group
+          </Button>
         </Stack>
 
         <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={2}
-          sx={{ alignItems: { xs: 'stretch', md: 'center' }, mb: 1.5 }}
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1.5}
+          sx={{ alignItems: { xs: 'stretch', sm: 'center' }, mb: 1.5 }}
         >
-          <ToggleButtonGroup
-            value={sport}
-            exclusive
-            onChange={(_event, value) => value && setSport(value)}
+          <TextField
+            type="search"
             size="small"
-            sx={{
-              flexWrap: 'wrap',
-              '& .MuiToggleButton-root': {
-                textTransform: 'none',
-                fontWeight: 600,
-                borderRadius: 999,
-                border: `1px solid ${colors.grayLight}`,
-                mx: 0.4,
-                '&.Mui-selected': {
-                  bgcolor: colors.navy,
-                  color: '#fff',
-                  '&:hover': { bgcolor: colors.navyDark },
-                },
+            placeholder="Search by name, city, sport, or tag"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            slotProps={{
+              htmlInput: { 'aria-label': 'Search Groups' },
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
               },
             }}
-          >
-            {sports.map((option) => (
-              <ToggleButton key={option} value={option}>
-                {option}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-
-          <FormControl size="small" sx={{ minWidth: 160, ml: { md: 'auto' } }}>
+            sx={{
+              flexGrow: 1,
+              '& .MuiOutlinedInput-root': { bgcolor: '#fff', borderRadius: 999, minHeight: 46, pl: 1 },
+            }}
+          />
+          <FormControl size="small" sx={{ minWidth: 160 }}>
             <InputLabel id="state-filter-label">State</InputLabel>
             <Select
               labelId="state-filter-label"
               label="State"
               value={state}
               onChange={(event) => setState(event.target.value)}
+              sx={{ bgcolor: '#fff', minHeight: 46 }}
             >
-              {states.map((option) => (
+              {STATES.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-
-          <Button
-            disabled={!hasActiveFilters}
-            onClick={() => {
-              setSport(ALL)
-              setState(ALL)
-            }}
-            sx={{ color: colors.navy, fontWeight: 600 }}
-          >
-            Clear filters
-          </Button>
         </Stack>
 
-        <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem', mb: 4 }}>
-          Showing {filtered.length} of {GROUPS.length} clubs
-        </Typography>
+        <SportPills sports={SPORTS} value={sport} onChange={setSport} />
+
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 3.5, minHeight: 44 }}>
+          <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
+            Showing {filtered.length} of {GROUPS.length} Groups
+          </Typography>
+          {hasActiveFilters && (
+            <Button onClick={clearFilters} sx={{ color: colors.navy, fontWeight: 700, px: 1.5 }}>
+              Clear filters
+            </Button>
+          )}
+        </Stack>
 
         {filtered.length === 0 ? (
           <Paper
@@ -145,90 +166,33 @@ export default function Groups() {
             sx={{
               p: 6,
               textAlign: 'center',
-              borderRadius: 3,
+              borderRadius: 3.5,
               border: `1px solid ${colors.grayLight}`,
             }}
           >
-            <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
-              No clubs match those filters yet. Know one that should be here?
+            <Typography sx={{ fontWeight: 700, fontSize: '1.1rem', mb: 1 }}>
+              No Groups match those filters yet
             </Typography>
-            <Button component={Link} href="/contact" sx={{ mt: 2, color: colors.navy, fontWeight: 700 }}>
-              Let us know &rarr;
+            <Typography sx={{ color: 'text.secondary', mb: 2.5 }}>
+              Run one that should be here? Add it so other former athletes can find it and join.
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              sx={{ bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
+            >
+              Add your Group
             </Button>
           </Paper>
         ) : (
           <Grid container spacing={3}>
             {filtered.map((group) => (
               <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 3.5,
-                    borderRadius: 3,
-                    border: `1px solid ${colors.grayLight}`,
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 16px 32px rgba(0,50,100,0.1)',
-                    },
-                  }}
-                >
-                  <Chip
-                    label={group.sport}
-                    size="small"
-                    sx={{
-                      alignSelf: 'flex-start',
-                      bgcolor: 'rgba(0,50,100,0.1)',
-                      color: colors.navy,
-                      fontWeight: 700,
-                      mb: 1.5,
-                    }}
-                  />
-                  <Typography variant="h5" sx={{ color: colors.navyDarker, mb: 0.5 }}>
-                    {group.name}
-                  </Typography>
-                  {(group.city || group.state) && (
-                    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', color: 'text.secondary', mb: 1.5 }}>
-                      <LocationOnIcon fontSize="small" />
-                      <Typography sx={{ fontSize: '0.9rem' }}>
-                        {[group.city, group.state].filter(Boolean).join(', ')}
-                      </Typography>
-                    </Stack>
-                  )}
-                  <Typography sx={{ color: 'text.secondary', fontSize: '0.95rem', lineHeight: 1.7, mb: 3, flexGrow: 1 }}>
-                    {group.description}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    href={group.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    endIcon={<NorthEastIcon sx={{ fontSize: 16 }} />}
-                    sx={{
-                      alignSelf: 'flex-start',
-                      bgcolor: colors.navy,
-                      '&:hover': { bgcolor: colors.navyDark },
-                    }}
-                  >
-                    Visit Site
-                  </Button>
-                </Paper>
+                <GroupCard group={group} />
               </Grid>
             ))}
           </Grid>
         )}
-
-        <Stack sx={{ alignItems: 'center', mt: 7 }}>
-          <Typography sx={{ color: 'text.secondary', mb: 1 }}>
-            Know a club that should be here?
-          </Typography>
-          <Button component={Link} href="/contact" variant="outlined" sx={{ color: colors.navy, borderColor: colors.navy }}>
-            Tell us about it
-          </Button>
-        </Stack>
       </Container>
     </Box>
   )

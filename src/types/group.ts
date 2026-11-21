@@ -10,7 +10,9 @@ export interface Group {
   state?: string
   country?: string
   description: string
-  /** External site linked from the "Visit Site" button. */
+  /** The Group's external website. Will be shown on its Group page. */
   website: string
   tags: string[]
+  /** Group image shown on the Group card. Falls back to the default Group image when missing. */
+  image?: string
 }

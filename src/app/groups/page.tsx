@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import GroupsPage from '../../components/groups/GroupsPage'
 
 export const metadata: Metadata = {
-  title: 'Groups & Clubs | Old Goat Athletics',
-  description: 'A directory of clubs for former college athletes staying competitive and active.',
+  title: 'Groups | Old Goat Athletics',
+  description: 'Clubs, teams, and crews for Old Goats such as yourself. Find one near you, or add your own.',
 }
 
 export default function Page() {
