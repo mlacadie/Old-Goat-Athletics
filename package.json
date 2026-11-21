@@ -9,9 +9,13 @@
     "build": "next build",
     "lint": "oxlint",
     "start": "next start",
-    "doctor": "yarn dlx react-doctor@latest ."
+    "doctor": "yarn dlx react-doctor@latest .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "vercel-build": "drizzle-kit migrate && next build"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.10.7",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -20,14 +24,18 @@
     "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
     "@mui/material-nextjs": "^9.5.0",
+    "@neondatabase/serverless": "^1.2.1",
+    "drizzle-orm": "^0.45.4",
     "next": "^16.4.6",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "drizzle-kit": "^0.31.11",
     "oxlint": "^1.81.0",
     "typescript": "^6.0.3"
   }

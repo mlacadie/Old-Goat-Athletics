@@ -9,7 +9,7 @@ This describes the site we are building toward, not only what exists today. Term
 | Term | Meaning |
 | --- | --- |
 | **Visitor** | Anyone browsing the site who is not signed in. Can see public pages, the Groups directory, and each Group's public info. |
-| **User** **(planned)** | Someone with an account who is signed in. Every User is also able to do everything a Visitor can. |
+| **User** | Someone with an account who is signed in. Every User is also able to do everything a Visitor can. |
 | **Member** **(planned)** | A User who has joined a specific Group. Membership is per Group: one User can be a Member of many Groups. |
 | **Group Owner** **(planned)** | The User who owns a Group, usually the one who added it. Every Group has exactly one (the `ownerId` field). Edits the Group's page and info, and manages its Announcements and Events. Groups listed before Accounts existed are owned by the Site Admin until someone claims them. |
 | **Site Admin** **(planned)** | Old Goat Athletics staff who can moderate any Group or User. |
@@ -44,14 +44,21 @@ This describes the site we are building toward, not only what exists today. Term
 | **Calendar** | The view on a Group page showing that Group's upcoming Events. |
 | **Members list** | The list of a Group's Members shown on its Group page. |
 
-## Accounts and notifications (planned)
+## Accounts
 
 | Term | Meaning |
 | --- | --- |
-| **Sign up** | Creating an account. Collects the contact info (email and/or phone) used for Notifications. |
+| **Sign up** | Creating an account at `/sign-up` (email code, password, or Google). Collects the email used for Notifications and an optional first and last name. Phone numbers come later. |
 | **Sign in / Sign out** | Starting and ending a session. "Signed in" = User, "signed out" = Visitor. |
+| **Profile** | `/profile`, where a User edits their name, email, password, and Notification preferences. |
+| **Display name** | How a User is shown to others: their first and last name, or "Old Goat" if they set none. Never their email or other contact info. |
+
+## Notifications (planned)
+
+| Term | Meaning |
+| --- | --- |
 | **Notification** | A message sent to a Member when their Group posts an Announcement or Event. |
-| **Notification channel** | How a Notification is delivered: **email** or **text (SMS)**. |
+| **Notification channel** | How a Notification is delivered: **email** or **text (SMS)**. Email only for the January release; Users already choose it on their Profile. |
 
 ## Current site (exists today)
 

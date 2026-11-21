@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
-import NorthEastIcon from '@mui/icons-material/NorthEast'
+import { UserButton, useAuth } from '@clerk/nextjs'
 import { colors } from '../../theme'
 import { NAV_LINKS } from '../../data/navLinks'
 
@@ -49,8 +49,16 @@ function HideOnScroll({ children }: { children: ReactElement }) {
   )
 }
 
+/** The signed-in User's avatar menu, with Profile and Sign out. */
+function AccountMenu() {
+  return <UserButton userProfileMode="navigation" userProfileUrl="/profile" />
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const { isLoaded, isSignedIn } = useAuth()
+  const showSignIn = isLoaded && !isSignedIn
+  const showAccount = isLoaded && isSignedIn
   const scrollTriggered = useScrollTrigger({ disableHysteresis: true, threshold: 8 })
   const pathname = usePathname()
   const scrolled = scrollTriggered || pathname !== '/'
@@ -121,26 +129,28 @@ export default function Header() {
                   {link.label}
                 </Button>
               ))}
-              <Button
-                href="https://ogtc.net/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outlined"
-                endIcon={<NorthEastIcon sx={{ fontSize: 14 }} />}
-                sx={{
-                  ml: 1,
-                  color: '#fff',
-                  borderColor: 'rgba(255,255,255,0.5)',
-                  '&:hover': {
-                    borderColor: '#fff',
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                  },
-                }}
-              >
-                Visit OGTC
-              </Button>
+              {showSignIn && (
+                <Button
+                  component={Link}
+                  href="/sign-in"
+                  variant="contained"
+                  sx={{
+                    ml: 1,
+                    bgcolor: colors.gold,
+                    color: colors.navyDarker,
+                    '&:hover': { bgcolor: colors.goldLight },
+                  }}
+                >
+                  Sign in
+                </Button>
+              )}
             </Box>
 
+            {showAccount && (
+              <Box sx={{ display: 'flex' }}>
+                <AccountMenu />
+              </Box>
+            )}
             <IconButton
               onClick={() => setOpen(true)}
               sx={{ display: { xs: 'flex', md: 'none' }, color: '#fff' }}
@@ -174,23 +184,27 @@ export default function Header() {
                 </ListItemButton>
               </ListItem>
             ))}
-            <ListItem disablePadding sx={{ mt: 1 }}>
-              <ListItemButton
-                component="a"
-                href="https://ogtc.net/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ListItemText
-                  primary="Visit OGTC ↗"
-                  slotProps={{
-                    primary: {
-                      sx: { color: colors.gold, fontWeight: 700, fontSize: '1.1rem' },
-                    },
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
+            {showSignIn && (
+              <>
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} href="/sign-in" onClick={closeMenu}>
+                    <ListItemText primary="Sign in" slotProps={drawerTextProps} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton component={Link} href="/sign-up" onClick={closeMenu}>
+                    <ListItemText primary="Sign up" slotProps={drawerTextProps} />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            )}
+            {showAccount && (
+              <ListItem disablePadding>
+                <ListItemButton component={Link} href="/profile" onClick={closeMenu}>
+                  <ListItemText primary="Profile" slotProps={drawerTextProps} />
+                </ListItemButton>
+              </ListItem>
+            )}
           </List>
         </Drawer>
       </AppBar>
