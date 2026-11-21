@@ -6,6 +6,5 @@ export interface NavLink {
 
 export const NAV_LINKS: NavLink[] = [
   { label: 'Groups', href: '/groups' },
-  { label: 'Socials', href: '/#socials' },
   { label: 'Contact Us', href: '/contact' },
 ]

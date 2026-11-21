@@ -130,24 +130,6 @@ export default function Header() {
                   {link.label}
                 </Button>
               ))}
-              <Button
-                href="https://ogtc.net/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outlined"
-                endIcon={<NorthEastIcon sx={{ fontSize: 14 }} />}
-                sx={{
-                  ml: 1,
-                  color: '#fff',
-                  borderColor: 'rgba(255,255,255,0.5)',
-                  '&:hover': {
-                    borderColor: '#fff',
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                  },
-                }}
-              >
-                Visit OGTC
-              </Button>
               {showSignIn && (
                 <Button
                   component={Link}
@@ -229,23 +211,6 @@ export default function Header() {
                 </ListItemButton>
               </ListItem>
             )}
-            <ListItem disablePadding sx={{ mt: 1 }}>
-              <ListItemButton
-                component="a"
-                href="https://ogtc.net/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ListItemText
-                  primary="Visit OGTC ↗"
-                  slotProps={{
-                    primary: {
-                      sx: { color: colors.gold, fontWeight: 700, fontSize: '1.1rem' },
-                    },
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
           </List>
         </Drawer>
       </AppBar>
