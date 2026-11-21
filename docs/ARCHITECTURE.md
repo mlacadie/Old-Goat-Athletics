@@ -109,6 +109,8 @@ Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db
 1. **Clerk webhook** (`/api/webhooks/clerk`): on `user.created` / `user.updated` it upserts the row from the event's own user data (no call back to Clerk, so late or retried events still succeed); on `user.deleted` it deletes it.
 2. **Profile page:** opening `/profile` upserts the row too, writing only if the name or email changed. This covers local development, where Clerk can't reach the webhook, and any missed webhook.
 
+**Webhook URL:** Clerk's endpoint must use the production domain, `https://old-goat-athletics.vercel.app/api/webhooks/clerk`. Vercel Deployment Protection (Standard Protection) puts every other URL, including the team URL `old-goat-athletics-old-goat1.vercel.app` and all preview URLs, behind a Vercel login, so Clerk gets a 401 there. Webhooks therefore only reach production; previews rely on the Profile page sync. Subscribed events: `user.created`, `user.updated`, `user.deleted`. When a custom domain and Clerk's production instance are set up, create a new endpoint on that domain and update `CLERK_WEBHOOK_SIGNING_SECRET` in Vercel.
+
 ### Environment variables
 
 Set in Vercel by the Clerk and Neon integrations (Preview and Production). They are secret, so `vercel env pull` can't download them; copy them into `.env.local` by hand for local work.
