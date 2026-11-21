@@ -18,7 +18,7 @@ Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [
 | Path | Files | Notes |
 | --- | --- | --- |
 | `/` | [app/page.tsx](../src/app/page.tsx) | Stacked Home page Sections from [components/home/](../src/components/home/). |
-| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with sport and state filters. Cards link out to each Group's own website. |
+| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx). The "Add your Group", "View Group", and "Join" buttons are placeholders with no action yet. |
 | `/contact` | [app/contact/page.tsx](../src/app/contact/page.tsx) | Renders [components/contact/ContactPage.tsx](../src/components/contact/ContactPage.tsx): form posted to Formspree. The endpoint is still a placeholder. |
 | anything else | [app/not-found.tsx](../src/app/not-found.tsx) | 404 page with a link home. |
 
@@ -69,8 +69,9 @@ Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Import
   "state": "MA",                 // drives the state filter
   "country": "USA",
   "description": "...",
-  "website": "https://...",      // "Visit Site" button
-  "tags": ["masters", "..."]
+  "website": "https://...",      // for the future Group page; not shown on the card
+  "tags": ["masters", "..."],    // searchable on the Groups page
+  "image": "/groups/....jpg"     // optional Group image; defaults to /logos/OGTC_OGoatG_KC.svg
 }
 ```
 

@@ -83,6 +83,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 - An "Add your Group" button on the Groups page. Visitors who click it are asked to sign in first.
 - The form uses the same fields the Groups page already uses: name, sport, city, state, country, description, website, tags.
+- **Sport** is picked from a set list of sports that we maintain, not typed in, so the Groups page's sport filter stays clean (no "Running" and "running" as separate pills). **Other** is always the last option in the list. The list lives in the code (e.g. `src/data/sports.ts`) and grows as new sports come up.
 - The form also takes an optional **Group image** (shown on the Group card and Group page) and an optional **Group banner** (shown across the top of the Group page). If either is left out, the default Group image (`public/logos/OGTC_OGoatG_KC.svg`) is used.
 - The Group Owner can edit their Group's info later, including replacing or removing the image and banner.
 - New Groups appear on the Groups page with the existing ones.
@@ -163,6 +164,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 
 - Group cards: Group image (or default), View Group and Join buttons, member count, next Event, "Joined" badge; search alongside sport/state filters; works with many Groups
 - "Add your Group" on the Groups page, which asks Visitors to sign in first
+- The Groups page layout from design A is built (see [ARCHITECTURE.md](ARCHITECTURE.md)); its View Group, Join, and Add your Group buttons get wired up by **Group Pages**, **Joining**, and **Add a Group**
 - Design directions to choose from (photo cards, directory list, badge cards, plus the Group page banner): [Groups Page Designs](https://claude.ai/artifact/V31KU4Zmjb31sPajZsLQ6d)
 - Group page: clear split between public info and members-only content; placement of Join / Leave and the sign in / join prompt
 - Owner-only controls (edit Group, post Announcement, add Event) that don't clutter the Member view
