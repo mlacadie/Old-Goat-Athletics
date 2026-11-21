@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Box, Container, Typography, Stack } from '@mui/material'
-import { colors } from '../theme.js'
+import { colors } from '../../theme'
 
 const WORDS = [
   'RUN',

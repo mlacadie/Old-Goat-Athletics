@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactElement } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -20,8 +20,8 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
-import { colors } from '../theme.js'
-import { NAV_LINKS } from '../data/navLinks.js'
+import { colors } from '../../theme'
+import { NAV_LINKS } from '../../data/navLinks'
 
 const navButtonSx = {
   color: 'rgba(255,255,255,0.88)',
@@ -40,7 +40,7 @@ const drawerTextProps = {
   },
 }
 
-function HideOnScroll({ children }) {
+function HideOnScroll({ children }: { children: ReactElement }) {
   const trigger = useScrollTrigger()
   return (
     <Slide appear={false} direction="down" in={!trigger}>

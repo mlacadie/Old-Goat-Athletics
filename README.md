@@ -2,9 +2,9 @@
 
 Site for Old Goat Athletics: a community for former college athletes to keep competing, find a new sport, and stay active for life.
 
-Built with Next.js + React + MUI, deployed on Vercel.
+Built with Next.js + React + MUI in TypeScript, deployed on Vercel.
 
-Shared brand colors and MUI theme config live in `src/theme.js`.
+Shared brand colors and MUI theme config live in `src/theme.ts`.
 
 ## Getting started
 

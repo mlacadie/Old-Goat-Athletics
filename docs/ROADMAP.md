@@ -12,8 +12,8 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 
 | Issue | Feature | One-liner | Depends on | Status |
 | - | --- | --- | --- | --- |
-| #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | In Progress |
-| #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | Planned |
+| #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | Done |
+| #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | In Progress |
 | #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Planned |
 | #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Planned |
 | #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
@@ -37,7 +37,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 **What it is:** Move the site from Vite + React Router on GitHub Pages to **Next.js (App Router) on Vercel** before building any features. This is a platform move only: the site should look and behave exactly as it does today.
 
 - Existing pages become Next.js routes: `/`, `/groups`, `/contact`, plus a 404 page
-- MUI, the theme in `src/theme.js`, the fonts, all Sections, and `clubs.json` carry over
+- MUI, the theme in `src/theme.ts`, the fonts, all Sections, and `clubs.json` carry over
 - React Router, the Vite config, and the GitHub Pages workflow are removed
 - Vercel deploys `main` to production and gives every pull request a preview link
 

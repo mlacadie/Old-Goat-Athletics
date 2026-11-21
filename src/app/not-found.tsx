@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Box, Container, Typography, Button, Stack } from '@mui/material'
-import { colors } from '../theme.js'
+import { colors } from '../theme'
 
 export default function NotFound() {
   return (

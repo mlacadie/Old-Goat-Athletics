@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import {
   Box,
   Container,
@@ -13,22 +13,24 @@ import {
   Alert,
 } from '@mui/material'
 import MailIcon from '@mui/icons-material/Mail'
-import { colors } from '../../theme.js'
+import { colors } from '../../theme'
 
 // Replace with your real Formspree endpoint after creating a form at https://formspree.io
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/your-form-id'
 const CONTACT_EMAIL = 'hello@oldgoatathletics.com'
 
-export default function Contact() {
-  const [status, setStatus] = useState('idle')
+type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error'
 
-  const handleSubmit = async (event) => {
+export default function Contact() {
+  const [status, setStatus] = useState<SubmitStatus>('idle')
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setStatus('submitting')
     try {
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        body: new FormData(event.target),
+        body: new FormData(event.currentTarget),
         headers: { Accept: 'application/json' },
       })
       if (response.ok) {

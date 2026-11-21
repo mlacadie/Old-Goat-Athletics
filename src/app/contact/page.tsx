@@ -1,6 +1,7 @@
-import ContactPage from './ContactPage.jsx'
+import type { Metadata } from 'next'
+import ContactPage from '../../components/contact/ContactPage'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Contact Us | Old Goat Athletics',
   description: 'Questions, ideas, or a club we should add to the directory? Reach out.',
 }

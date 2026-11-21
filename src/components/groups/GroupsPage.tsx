@@ -20,8 +20,8 @@ import {
 } from '@mui/material'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import { colors } from '../../theme.js'
-import clubs from '../../data/clubs.json'
+import { colors } from '../../theme'
+import { GROUPS } from '../../data/groups'
 
 const ALL = 'All'
 
@@ -30,18 +30,18 @@ export default function Groups() {
   const [state, setState] = useState(ALL)
 
   const sports = useMemo(
-    () => [ALL, ...new Set(clubs.map((club) => club.sport).filter(Boolean))],
+    () => [ALL, ...new Set(GROUPS.map((group) => group.sport).filter(Boolean))],
     []
   )
   const states = useMemo(
-    () => [ALL, ...new Set(clubs.map((club) => club.state).filter(Boolean))],
+    () => [ALL, ...new Set(GROUPS.map((group) => group.state).filter(Boolean))],
     []
   )
 
   const filtered = useMemo(
     () =>
-      clubs.filter(
-        (club) => (sport === ALL || club.sport === sport) && (state === ALL || club.state === state)
+      GROUPS.filter(
+        (group) => (sport === ALL || group.sport === sport) && (state === ALL || group.state === state)
       ),
     [sport, state]
   )
@@ -136,7 +136,7 @@ export default function Groups() {
         </Stack>
 
         <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem', mb: 4 }}>
-          Showing {filtered.length} of {clubs.length} clubs
+          Showing {filtered.length} of {GROUPS.length} clubs
         </Typography>
 
         {filtered.length === 0 ? (
@@ -158,8 +158,8 @@ export default function Groups() {
           </Paper>
         ) : (
           <Grid container spacing={3}>
-            {filtered.map((club) => (
-              <Grid key={club.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            {filtered.map((group) => (
+              <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <Paper
                   elevation={0}
                   sx={{
@@ -177,7 +177,7 @@ export default function Groups() {
                   }}
                 >
                   <Chip
-                    label={club.sport}
+                    label={group.sport}
                     size="small"
                     sx={{
                       alignSelf: 'flex-start',
@@ -188,22 +188,22 @@ export default function Groups() {
                     }}
                   />
                   <Typography variant="h5" sx={{ color: colors.navyDarker, mb: 0.5 }}>
-                    {club.name}
+                    {group.name}
                   </Typography>
-                  {(club.city || club.state) && (
+                  {(group.city || group.state) && (
                     <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', color: 'text.secondary', mb: 1.5 }}>
                       <LocationOnIcon fontSize="small" />
                       <Typography sx={{ fontSize: '0.9rem' }}>
-                        {[club.city, club.state].filter(Boolean).join(', ')}
+                        {[group.city, group.state].filter(Boolean).join(', ')}
                       </Typography>
                     </Stack>
                   )}
                   <Typography sx={{ color: 'text.secondary', fontSize: '0.95rem', lineHeight: 1.7, mb: 3, flexGrow: 1 }}>
-                    {club.description}
+                    {group.description}
                   </Typography>
                   <Button
                     variant="contained"
-                    href={club.website}
+                    href={group.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     endIcon={<NorthEastIcon sx={{ fontSize: 16 }} />}

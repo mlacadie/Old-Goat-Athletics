@@ -2,8 +2,8 @@ import { Box, Container, Grid, Typography, Paper, Chip, Stack } from '@mui/mater
 import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import XIcon from '@mui/icons-material/X'
-import TikTokIcon from '../icons/TikTokIcon.jsx'
-import { colors } from '../theme.js'
+import TikTokIcon from '../icons/TikTokIcon'
+import { colors } from '../../theme'
 
 const PLATFORMS = [
   { name: 'Instagram', handle: '@oldgoatathletics', Icon: InstagramIcon },
