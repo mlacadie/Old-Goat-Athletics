@@ -26,3 +26,4 @@ yarn dev
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the site works
 - [docs/ROADMAP.md](docs/ROADMAP.md): planned features
 - [docs/GLOSSARY.md](docs/GLOSSARY.md): shared terms
+- [CONTRIBUTING.md](CONTRIBUTING.md): branches, commits, pull requests, and issues

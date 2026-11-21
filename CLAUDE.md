@@ -18,5 +18,9 @@ Do not start the dev server; the user checks the app manually.
 
 ## Workflow
 
-- One feature or issue per branch and pull request.
+Follow [CONTRIBUTING.md](CONTRIBUTING.md) for branches, commits, pull requests, and issues. In short:
+
+- One feature, fix, removal, or refactor per branch and PR.
+- Imperative commit messages with no prefixes (`Add Group page route`, not `feat: ...`). Nothing starts with `codex/`.
+- PR description is just a summary, plus `Closes #<number>`. Close issues and move them to Done on the board when complete.
 - Keep the docs in sync: update ARCHITECTURE.md when how the site works changes, and ROADMAP.md / the project board when a feature's status changes.
