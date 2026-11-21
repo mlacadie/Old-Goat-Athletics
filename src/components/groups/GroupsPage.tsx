@@ -65,7 +65,7 @@ export default function GroupsPage() {
   }
 
   return (
-    <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 }, minHeight: '100vh' }}>
+    <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 } }}>
       <Container maxWidth="lg">
         <Stack
           direction={{ xs: 'column', md: 'row' }}
