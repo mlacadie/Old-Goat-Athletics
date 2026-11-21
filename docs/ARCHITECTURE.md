@@ -2,6 +2,8 @@
 
 How the site works **today**. For planned changes see [ROADMAP.md](ROADMAP.md); for terms see [GLOSSARY.md](GLOSSARY.md).
 
+> **Planned change:** the site is moving to **Next.js on Vercel** (Next.js Migration, issue #12). Until that ships, everything below is accurate. When it does, rewrite this file for the new setup: routes become folders under `app/`, there is no React Router, and Vercel replaces the GitHub Pages workflow.
+
 ## Stack
 
 - **React 19** + **Vite** single-page app

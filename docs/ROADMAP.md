@@ -8,22 +8,39 @@ Old Goat Athletics becomes the home base for former college athletes' Groups. An
 
 ## Features at a glance
 
-Each feature has a short name. Use that name when we talk about building it.
+Each feature has a short name. Use that name when we talk about building it. Each one has a matching GitHub issue, tracked on the [project board](https://github.com/users/mlacadie/projects/2). Everything is due **Jan 1, 2027** (milestone *Roadmap v1*).
 
-| # | Feature | One-liner | Depends on | Status |
+| Issue | Feature | One-liner | Depends on | Status |
 | - | --- | --- | --- | --- |
-| 1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | – | Planned |
-| 2 | **Group Pages** | Each Group gets its own page, opened from its Group card | – | Planned |
-| 3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
-| 4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
-| 5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
-| 6 | **Announcements** | Group Owners post updates to their Group | Members-only Content | Planned |
-| 7 | **Events & Calendar** | Group Owners post Events; Group page shows upcoming ones | Members-only Content | Planned |
-| 8 | **Notifications** | Members get email/text for new Announcements and Events | Announcements or Events | Planned |
+| #12 | **Next.js Migration** | Move from Vite on GitHub Pages to Next.js on Vercel, with no visible changes | – | Planned |
+| #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Planned |
+| #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Planned |
+| #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
+| #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
+| #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
+| #6 | **Announcements** | Group Owners post updates to their Group | Members-only Content | Planned |
+| #7 | **Events & Calendar** | Group Owners post Events; Group page shows upcoming ones | Members-only Content | Planned |
+| #8 | **Notifications** | Members get email/text for new Announcements and Events | Announcements or Events | Planned |
+| #9 | **Site Redesign** | Update Header and Home page for Visitors and signed-in Users | Accounts, Joining | Planned |
+| #10 | **Group View Redesign** | Redesign the Groups page and Group page for Members and Owners | Group Pages | Planned |
+| #11 | **Shopify Store** | Replace the Merch placeholder with a real store | – | Planned |
 
-**Suggested build order:** 2 → 1 → 3 → 4 → 5 → 6 → 7 → 8. Group Pages can ship first on today's static data, before there are accounts.
+**Suggested build order:** Next.js Migration → Group Pages → Accounts → Add a Group → Joining → Members-only Content → Announcements → Events & Calendar → Notifications. **Group View Redesign** and **Site Redesign** follow the features they depend on. **Shopify Store** can happen any time after the migration.
 
-When a feature ships, change its status here and remove the **(planned)** marker from its terms in the glossary.
+When a feature ships, change its status here, close its issue, and remove the **(planned)** marker from its terms in the glossary.
+
+---
+
+## 0. Next.js Migration
+
+**What it is:** Move the site from Vite + React Router on GitHub Pages to **Next.js (App Router) on Vercel** before building any features. This is a platform move only: the site should look and behave exactly as it does today.
+
+- Existing pages become Next.js routes: `/`, `/groups`, `/contact`, plus a 404 page
+- MUI, the theme in `src/theme.js`, the fonts, all Sections, and `clubs.json` carry over
+- React Router, the Vite config, and the GitHub Pages workflow are removed
+- Vercel deploys `main` to production and gives every pull request a preview link
+
+**Done when:** the live site runs on Vercel from Next.js, looks the same as before, and GitHub Pages is switched off.
 
 ---
 
@@ -116,6 +133,38 @@ When a feature ships, change its status here and remove the **(planned)** marker
 
 **Done when:** a Member reliably gets a Notification on their chosen channel when their Group posts, and can turn Notifications off.
 
+## 9. Site Redesign
+
+**What it is:** Update the overall site, especially the **Header** and **Home page**, so it fits the new features and works for both Visitors and signed-in Users.
+
+- Header: Sign in / Sign up for Visitors; profile, My Groups, and Sign out for Users
+- Hero buttons may change to "Join a Group" / "Add your Group"
+- Community section could feature real Groups instead of one external link
+- Merch section changes once the **Shopify Store** exists
+- Decide whether signed-in Users get a different Home page (their Groups, upcoming Events, recent Announcements)
+
+**Done when:** the Header and Home page design covers Visitors and Users, and is built.
+
+## 10. Group View Redesign
+
+**What it is:** Redesign the **Groups page** and the **Group page** so they hold up once Groups have Members, Announcements, and Events.
+
+- Group cards: member count, next Event, "Joined" badge; search alongside sport/state filters; works with many Groups
+- Group page: clear split between public info and members-only content; placement of Join / Leave and the sign in / join prompt
+- Owner-only controls (edit Group, post Announcement, add Event) that don't clutter the Member view
+
+**Done when:** both pages are designed and built for Visitors, Members, and Group Owners.
+
+## 11. Shopify Store
+
+**What it is:** Sell Old Goat Athletics merch through Shopify, replacing the "In the works" Merch placeholder.
+
+- Either link out to the Shopify storefront, or show products on the site (Buy Button / Storefront API)
+- Checkout always happens through Shopify
+- Possibly a "Shop" link in the Header
+
+**Done when:** a Visitor can find merch from the site and buy it.
+
 ---
 
 ## Data model (conceptual)
@@ -144,14 +193,18 @@ Group fields deliberately match today's [clubs.json](../src/data/clubs.json) so 
 
 ## Technical direction
 
-Today the site is fully static (see [ARCHITECTURE.md](ARCHITECTURE.md)). From **Accounts** onward we need:
+Today the site is a static Vite app on GitHub Pages (see [ARCHITECTURE.md](ARCHITECTURE.md)).
+
+**Decided:** move to **Next.js (App Router) hosted on Vercel** (see **Next.js Migration**). Next.js lets server code live in the same project: pages rendered on the server, server-side data access, API routes, and scheduled jobs.
+
+From **Accounts** onward we also need:
 
 - **Authentication**: user accounts and sessions.
 - **A database** for the entities above.
-- **Server-side access control** for members-only content.
+- **Server-side access control** for members-only content, enforced in Next.js server code and/or database rules.
 - **Email and SMS delivery** for Notifications.
 
-Likely shape: the React front end stays on GitHub Pages and talks to a hosted backend service that provides auth, database, and access rules, plus an email/SMS provider. **No service has been chosen yet.** That decision is made when we start **Accounts**.
+**Not decided yet:** which auth provider, database, and email/SMS services to use. We choose them when we start **Accounts**, favoring ones that work well with Next.js and Vercel.
 
 ## Open questions
 
@@ -167,3 +220,6 @@ Decide these before or while building the feature in brackets.
 8. **[Members-only Content]** Can a Member hide themselves from the Members list?
 9. **[Members-only Content]** Should non-members see a teaser, e.g. "3 upcoming Events, join to see"?
 10. **[Events & Calendar]** Do Events need recurring schedules, RSVPs, or reminder Notifications before they start?
+11. **[Next.js Migration]** Is there a custom domain to move from GitHub Pages to Vercel?
+12. **[Shopify Store]** Does the Shopify store already exist? Link out or show products on the site? Do Members get perks?
+13. **[Site Redesign]** Should signed-in Users get a different Home page?

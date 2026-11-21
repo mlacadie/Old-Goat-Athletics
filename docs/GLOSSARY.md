@@ -2,7 +2,7 @@
 
 The shared vocabulary for Old Goat Athletics. When we talk about the site (in issues, commits, code, or conversations with Claude), use these terms with these meanings. If a term here stops matching reality, update this file first.
 
-This describes the site we are building toward, not only what exists today. Terms marked **(planned)** belong to features in [ROADMAP.md](ROADMAP.md) that are not built yet. Remove the marker when the feature ships. Feature names (**Accounts**, **Group Pages**, **Add a Group**, **Joining**, **Members-only Content**, **Announcements**, **Events & Calendar**, **Notifications**) are defined in the roadmap.
+This describes the site we are building toward, not only what exists today. Terms marked **(planned)** belong to features in [ROADMAP.md](ROADMAP.md) that are not built yet. Remove the marker when the feature ships. Feature names (**Next.js Migration**, **Accounts**, **Group Pages**, **Add a Group**, **Joining**, **Members-only Content**, **Announcements**, **Events & Calendar**, **Notifications**, **Site Redesign**, **Group View Redesign**, **Shopify Store**) are defined in the roadmap.
 
 ## People
 
