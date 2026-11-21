@@ -7,7 +7,8 @@ import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
   displayName: text('display_name').notNull(),
-  email: text('email').notNull(),
+  /** Primary email from Clerk; null if the account has none. */
+  email: text('email'),
   /** Notification preference: email the User when their Groups post. */
   emailNotifications: boolean('email_notifications').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

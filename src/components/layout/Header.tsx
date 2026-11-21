@@ -144,15 +144,10 @@ export default function Header() {
                   Sign in
                 </Button>
               )}
-              {showAccount && (
-                <Box sx={{ ml: 1.5, display: 'flex' }}>
-                  <AccountMenu />
-                </Box>
-              )}
             </Box>
 
             {showAccount && (
-              <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+              <Box sx={{ display: 'flex' }}>
                 <AccountMenu />
               </Box>
             )}

@@ -1,36 +1,59 @@
 import 'server-only'
-import { eq } from 'drizzle-orm'
-import type { User as ClerkUser } from '@clerk/nextjs/server'
-import { db } from '../db'
+import { eq, sql } from 'drizzle-orm'
+import type { User as ClerkUser, UserJSON } from '@clerk/nextjs/server'
+import { getDb } from '../db'
 import { users } from '../db/schema'
+import { getDisplayName } from './displayName'
 
-/** Shown in place of a name for Users who haven't set one. Never fall back to contact info. */
-const UNNAMED_USER = 'Member'
-
-export function getDisplayName(clerkUser: ClerkUser): string {
-  const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ')
-  return name || UNNAMED_USER
+/** The parts of a Clerk account the users table mirrors. */
+export interface UserRecord {
+  id: string
+  displayName: string
+  /** Null when the account has no primary email address. */
+  email: string | null
 }
 
-/** Creates or updates the User's row from their Clerk account. Keeps their preferences. */
-export async function syncUser(clerkUser: ClerkUser): Promise<void> {
-  const profile = {
-    displayName: getDisplayName(clerkUser),
-    email: clerkUser.primaryEmailAddress?.emailAddress ?? '',
-    updatedAt: new Date(),
+export function userRecordFromClerk(clerkUser: ClerkUser): UserRecord {
+  return {
+    id: clerkUser.id,
+    displayName: getDisplayName(clerkUser.firstName, clerkUser.lastName),
+    email: clerkUser.primaryEmailAddress?.emailAddress ?? null,
   }
-  await db
+}
+
+/** Same as `userRecordFromClerk`, from the user data in a Clerk webhook event. */
+export function userRecordFromWebhook(data: UserJSON): UserRecord {
+  const primaryEmail = data.email_addresses.find(
+    (address) => address.id === data.primary_email_address_id,
+  )
+  return {
+    id: data.id,
+    displayName: getDisplayName(data.first_name, data.last_name),
+    email: primaryEmail?.email_address ?? null,
+  }
+}
+
+/**
+ * Creates the User's row, or updates its name and email if they changed. Keeps their
+ * preferences, and skips the write when nothing changed.
+ */
+export async function syncUser({ id, displayName, email }: UserRecord): Promise<void> {
+  await getDb()
     .insert(users)
-    .values({ id: clerkUser.id, ...profile })
-    .onConflictDoUpdate({ target: users.id, set: profile })
+    .values({ id, displayName, email })
+    .onConflictDoUpdate({
+      target: users.id,
+      set: { displayName, email, updatedAt: new Date() },
+      setWhere: sql`(${users.displayName}, ${users.email}) is distinct from (excluded.display_name, excluded.email)`,
+    })
 }
 
 export async function deleteUser(userId: string): Promise<void> {
-  await db.delete(users).where(eq(users.id, userId))
+  await getDb().delete(users).where(eq(users.id, userId))
 }
 
 export async function getEmailNotifications(userId: string): Promise<boolean> {
-  const [row] = await db
+  const [row] = await getDb()
     .select({ emailNotifications: users.emailNotifications })
     .from(users)
     .where(eq(users.id, userId))
@@ -38,7 +61,7 @@ export async function getEmailNotifications(userId: string): Promise<boolean> {
 }
 
 export async function setEmailNotifications(userId: string, enabled: boolean): Promise<void> {
-  await db
+  await getDb()
     .update(users)
     .set({ emailNotifications: enabled, updatedAt: new Date() })
     .where(eq(users.id, userId))

@@ -23,7 +23,7 @@ Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [
 | `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. The "Add your Group" and "Join" buttons are placeholders with no action yet. |
 | `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group (ids from `generateStaticParams`), rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, Join) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
 | `/sign-in`, `/sign-up` | [app/sign-in/[[...sign-in]]/page.tsx](../src/app/sign-in/[[...sign-in]]/page.tsx), [app/sign-up/[[...sign-up]]/page.tsx](../src/app/sign-up/[[...sign-up]]/page.tsx) | Clerk's `<SignIn>` / `<SignUp>` forms inside [AccountSection.tsx](../src/components/account/AccountSection.tsx). Catch-all folders because Clerk adds its own sub-steps (e.g. `/sign-in/factor-one`). |
-| `/profile` | [app/profile/[[...profile]]/page.tsx](../src/app/profile/[[...profile]]/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) plus our own Notifications tab ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
+| `/profile` | [app/profile/page.tsx](../src/app/profile/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) with hash routing (tabs switch in the browser, e.g. `/profile#/security`) plus our own Notifications tab ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
 | `/api/webhooks/clerk` | [app/api/webhooks/clerk/route.ts](../src/app/api/webhooks/clerk/route.ts) | Clerk calls this on account create, update, and delete; keeps the `users` table in sync. |
 | `/contact` | [app/contact/page.tsx](../src/app/contact/page.tsx) | Renders [components/contact/ContactPage.tsx](../src/components/contact/ContactPage.tsx): form posted to Formspree. The endpoint is still a placeholder. |
 | anything else | [app/not-found.tsx](../src/app/not-found.tsx) | 404 page with a link home. |
@@ -56,7 +56,7 @@ src/
     icons/      Custom icons not in MUI
   data/         Static content: clubs.json + groups.ts (Groups), navLinks.ts
   db/           Database: schema.ts (Drizzle tables) and index.ts (the `db` client)
-  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table)
+  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; displayName.ts)
   types/        Shared TypeScript types (e.g. `Group`, `User`)
   theme.ts      Brand colors (`colors`) and MUI theme
   proxy.ts      Clerk on every request; protects User-only routes (Next.js 16's name for middleware)
@@ -97,17 +97,17 @@ Every Group has an Owner. Groups listed before Accounts existed are owned by the
 - **Clerk owns sign-in.** Users sign in with an email code, a password, or Google (switched on in the Clerk dashboard, not in code). Names are Clerk's optional first and last name. [layout.tsx](../src/app/layout.tsx) wraps the app in `<ClerkProvider>`, which points at our `/sign-in` and `/sign-up` pages and styles Clerk's forms with the theme's navy, font, and corner radius.
 - **[proxy.ts](../src/proxy.ts)** runs Clerk on every request. Every page is public except those in `isUserOnlyRoute` (currently `/profile`), which send Visitors to sign in.
 - **Header:** Visitors get **Sign in** (and **Sign up** in the mobile menu); signed-in Users get Clerk's `<UserButton>` avatar menu with Profile and Sign out. It uses Clerk's `useAuth()` because the Header is a client component.
-- **Display name:** first and last name, or `"Member"` if neither is set. Never fall back to the email: the Members list must not show contact info. Lives in `getDisplayName()` in [users.ts](../src/lib/users.ts).
+- **Display name:** first and last name, or `"Member"` if neither is set. Never fall back to the email: the Members list must not show contact info. Lives in `getDisplayName()` in [displayName.ts](../src/lib/displayName.ts).
 - **Phone numbers** are not collected yet (deferred past the January release), so Notifications are email-only.
 
 ## Database
 
-Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code imports `db` from [src/db/index.ts](../src/db/index.ts). Only server code may touch the database ([users.ts](../src/lib/users.ts) imports `server-only` to enforce this).
+Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code calls `getDb()` from [src/db/index.ts](../src/db/index.ts), which connects on first use, so pages that never query the database (and `yarn build`) work without `DATABASE_URL`. Only server code may touch the database ([users.ts](../src/lib/users.ts) imports `server-only` to enforce this).
 
-**`users`** mirrors each Clerk account: `id` (the Clerk user id), `display_name`, `email`, `email_notifications` (default on), `created_at`, `updated_at`. It is kept in sync two ways:
+**`users`** mirrors each Clerk account: `id` (the Clerk user id), `display_name`, `email` (primary email; null if the account has none), `email_notifications` (default on), `created_at`, `updated_at`. It is kept in sync two ways:
 
-1. **Clerk webhook** (`/api/webhooks/clerk`): on `user.created` / `user.updated` it re-reads the user from Clerk and upserts the row; on `user.deleted` it deletes it.
-2. **Profile page:** opening `/profile` upserts the row too. This covers local development, where Clerk can't reach the webhook, and any missed webhook.
+1. **Clerk webhook** (`/api/webhooks/clerk`): on `user.created` / `user.updated` it upserts the row from the event's own user data (no call back to Clerk, so late or retried events still succeed); on `user.deleted` it deletes it.
+2. **Profile page:** opening `/profile` upserts the row too, writing only if the name or email changed. This covers local development, where Clerk can't reach the webhook, and any missed webhook.
 
 ### Environment variables
 
@@ -128,7 +128,7 @@ Set in Vercel by the Clerk and Neon integrations (Preview and Production). They 
 
 ## Who is viewing
 
-[src/lib/viewer.ts](../src/lib/viewer.ts) decides how the person looking at a Group page relates to it. `getCurrentUser()` returns the signed-in User from Clerk (or `null` for a Visitor), and `getGroupRole(group, user)` turns that into a `GroupRole`: `visitor`, `user`, `member` (once **Joining** exists), or `owner`. The Group page's server component works out the role and passes it down, so members-only content and Owner controls can be added by checking the role without restructuring the page. Members-only data must still be checked on the server, never only hidden in the UI.
+[src/lib/viewer.ts](../src/lib/viewer.ts) decides how the person looking at a Group page relates to it. `getCurrentUserId()` returns the signed-in User's id from the session token (no network call; `null` for a Visitor), and `getGroupRole(group, userId)` turns that into a `GroupRole`: `visitor`, `user`, `member` (once **Joining** exists), or `owner`. The Group page's server component works out the role and passes it down, so members-only content and Owner controls can be added by checking the role without restructuring the page. Members-only data must still be checked on the server, never only hidden in the UI.
 
 ## Checks (required before work is done)
 

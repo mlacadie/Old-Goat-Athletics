@@ -6,22 +6,23 @@ import { updateEmailNotifications } from '../../app/profile/actions'
 
 /** The Notifications tab on the profile: which channels a User gets Notifications on. */
 export default function NotificationSettings({
-  initialEmailNotifications,
+  emailNotifications,
+  onEmailNotificationsChange,
 }: {
-  initialEmailNotifications: boolean
+  emailNotifications: boolean
+  onEmailNotificationsChange: (enabled: boolean) => void
 }) {
-  const [emailNotifications, setEmailNotifications] = useState(initialEmailNotifications)
   const [saveFailed, setSaveFailed] = useState(false)
   const [isSaving, startTransition] = useTransition()
 
   const handleChange = (enabled: boolean) => {
-    setEmailNotifications(enabled)
+    onEmailNotificationsChange(enabled)
     setSaveFailed(false)
     startTransition(async () => {
       try {
         await updateEmailNotifications(enabled)
       } catch {
-        setEmailNotifications(!enabled)
+        onEmailNotificationsChange(!enabled)
         setSaveFailed(true)
       }
     })
