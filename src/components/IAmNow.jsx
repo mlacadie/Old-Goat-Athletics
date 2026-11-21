@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { Box, Container, Typography, Chip, Stack } from '@mui/material'
+import { Box, Container, Typography, Stack } from '@mui/material'
 import { colors } from '../theme.js'
 
 const WORDS = [
@@ -25,23 +27,21 @@ export default function IAmNow() {
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(true)
 
+  // Show each word for 1800ms, fade out for 250ms, then swap to the next word.
   useEffect(() => {
-    let timeoutId
-
-    const fadeOut = () => {
-      setVisible(false)
-      timeoutId = setTimeout(swap, 250)
-    }
-
-    const swap = () => {
-      setIndex((prev) => (prev + 1) % WORDS.length)
-      setVisible(true)
-      timeoutId = setTimeout(fadeOut, 1800)
-    }
-
-    timeoutId = setTimeout(fadeOut, 1800)
+    const timeoutId = setTimeout(
+      () => {
+        if (visible) {
+          setVisible(false)
+        } else {
+          setIndex((prev) => (prev + 1) % WORDS.length)
+          setVisible(true)
+        }
+      },
+      visible ? 1800 : 250
+    )
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [visible])
 
   return (
     <Box

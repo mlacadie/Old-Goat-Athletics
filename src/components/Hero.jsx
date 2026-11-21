@@ -1,15 +1,12 @@
+'use client'
+
 import { Box, Container, Typography, Button, Stack } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import Link from 'next/link'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { colors } from '../theme.js'
 
 export default function Hero() {
-  const scrollTo = (href) => (event) => {
-    event.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <Box
       id="top"
@@ -26,7 +23,7 @@ export default function Hero() {
     >
       <Box
         component="img"
-        src={`${import.meta.env.BASE_URL}logos/OGTC_Old_Goat.svg`}
+        src="/logos/OGTC_Old_Goat.svg"
         alt=""
         aria-hidden="true"
         sx={{
@@ -85,8 +82,8 @@ export default function Hero() {
             <Button
               size="large"
               variant="contained"
-              component={RouterLink}
-              to="/groups"
+              component={Link}
+              href="/groups"
               sx={{
                 bgcolor: colors.gold,
                 color: colors.navyDarker,
@@ -99,7 +96,7 @@ export default function Hero() {
             <Button
               size="large"
               variant="outlined"
-              onClick={scrollTo('#socials')}
+              href="#socials"
               endIcon={<NorthEastIcon sx={{ fontSize: 16 }} />}
               sx={{
                 color: '#fff',
@@ -115,8 +112,8 @@ export default function Hero() {
       </Container>
 
       <Box
-        onClick={scrollTo('#mission')}
-        role="button"
+        component="a"
+        href="#mission"
         aria-label="Scroll to mission"
         sx={{
           position: 'absolute',

@@ -1,5 +1,7 @@
+'use client'
+
 import { Box, Container, Grid, Typography, Stack, IconButton, Divider } from '@mui/material'
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
+import Link from 'next/link'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import XIcon from '@mui/icons-material/X'
@@ -15,18 +17,6 @@ const SOCIAL_ICONS = [
 ]
 
 export default function Footer() {
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  const handleAnchorClick = (href) => (event) => {
-    event.preventDefault()
-    if (location.pathname === '/') {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      navigate('/', { state: { scrollTo: href } })
-    }
-  }
-
   return (
     <Box component="footer" sx={{ bgcolor: colors.navyDarker, color: '#fff', pt: 8, pb: 4 }}>
       <Container maxWidth="lg">
@@ -35,7 +25,7 @@ export default function Footer() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1.2, mb: 2 }}>
               <Box
                 component="img"
-                src={`${import.meta.env.BASE_URL}logos/oldGoat.svg`}
+                src="/logos/oldGoat.svg"
                 alt=""
                 sx={{ width: 55, height: 'auto', filter: 'brightness(0) invert(1)' }}
               />
@@ -64,37 +54,20 @@ export default function Footer() {
               Explore
             </Typography>
             <Stack spacing={1.2}>
-              {NAV_LINKS.map((link) =>
-                link.type === 'route' ? (
-                  <Typography
-                    key={link.to}
-                    component={RouterLink}
-                    to={link.to}
-                    sx={{
-                      color: 'rgba(255,255,255,0.65)',
-                      textDecoration: 'none',
-                      '&:hover': { color: colors.gold },
-                    }}
-                  >
-                    {link.label}
-                  </Typography>
-                ) : (
-                  <Typography
-                    key={link.href}
-                    component="a"
-                    href={link.href}
-                    onClick={handleAnchorClick(link.href)}
-                    sx={{
-                      color: 'rgba(255,255,255,0.65)',
-                      textDecoration: 'none',
-                      cursor: 'pointer',
-                      '&:hover': { color: colors.gold },
-                    }}
-                  >
-                    {link.label}
-                  </Typography>
-                )
-              )}
+              {NAV_LINKS.map((link) => (
+                <Typography
+                  key={link.href}
+                  component={Link}
+                  href={link.href}
+                  sx={{
+                    color: 'rgba(255,255,255,0.65)',
+                    textDecoration: 'none',
+                    '&:hover': { color: colors.gold },
+                  }}
+                >
+                  {link.label}
+                </Typography>
+              ))}
             </Stack>
           </Grid>
 

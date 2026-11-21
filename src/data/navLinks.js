@@ -1,5 +1,5 @@
 export const NAV_LINKS = [
-  { label: 'Groups', to: '/groups', type: 'route' },
-  { label: 'Socials', href: '#socials', type: 'anchor' },
-  { label: 'Contact Us', to: '/contact', type: 'route' },
+  { label: 'Groups', href: '/groups' },
+  { label: 'Socials', href: '/#socials' },
+  { label: 'Contact Us', href: '/contact' },
 ]

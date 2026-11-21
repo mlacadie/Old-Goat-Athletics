@@ -1,5 +1,7 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import Link from 'next/link'
 import {
   Box,
   Container,
@@ -18,8 +20,8 @@ import {
 } from '@mui/material'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import { colors } from '../theme.js'
-import clubs from '../data/clubs.json'
+import { colors } from '../../theme.js'
+import clubs from '../../data/clubs.json'
 
 const ALL = 'All'
 
@@ -150,7 +152,7 @@ export default function Groups() {
             <Typography sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
               No clubs match those filters yet. Know one that should be here?
             </Typography>
-            <Button component={RouterLink} to="/contact" sx={{ mt: 2, color: colors.navy, fontWeight: 700 }}>
+            <Button component={Link} href="/contact" sx={{ mt: 2, color: colors.navy, fontWeight: 700 }}>
               Let us know &rarr;
             </Button>
           </Paper>
@@ -223,7 +225,7 @@ export default function Groups() {
           <Typography sx={{ color: 'text.secondary', mb: 1 }}>
             Know a club that should be here?
           </Typography>
-          <Button component={RouterLink} to="/contact" variant="outlined" sx={{ color: colors.navy, borderColor: colors.navy }}>
+          <Button component={Link} href="/contact" variant="outlined" sx={{ color: colors.navy, borderColor: colors.navy }}>
             Tell us about it
           </Button>
         </Stack>
