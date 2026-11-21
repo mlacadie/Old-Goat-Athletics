@@ -8,6 +8,8 @@ export const colors = {
   grayLight: '#e4e3e1',
   bone: '#f6f4ef',
   gold: '#c9982f',
+  /** Gold for small text on navy backgrounds, where `gold` is too dark to read comfortably. */
+  goldLight: '#e7c97f',
 }
 
 const theme = createTheme({

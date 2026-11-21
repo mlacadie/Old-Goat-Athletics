@@ -1,10 +1,11 @@
+'use client'
+
+import Link from 'next/link'
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import { colors } from '../../theme'
+import { DEFAULT_GROUP_IMAGE } from '../../data/groups'
 import type { Group } from '../../types/group'
-
-/** Shown when a Group has no Group image of its own. */
-export const DEFAULT_GROUP_IMAGE = '/logos/OGTC_OGoatG_KC.svg'
 
 export default function GroupCard({ group }: { group: Group }) {
   const location = [group.city, group.state].filter(Boolean).join(', ')
@@ -79,6 +80,8 @@ export default function GroupCard({ group }: { group: Group }) {
         </Typography>
         <Stack direction="row" spacing={1.25} sx={{ pt: 1.5 }}>
           <Button
+            component={Link}
+            href={`/groups/${group.id}`}
             variant="outlined"
             sx={{ flex: 1, color: colors.navy, borderColor: colors.navy, px: 2 }}
           >

@@ -13,12 +13,13 @@ There is no backend, database, or user accounts yet. All content is in the sourc
 
 ## Routes
 
-Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [layout.tsx](../src/app/layout.tsx), which renders the Header, the page, and the Footer.
+Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [layout.tsx](../src/app/layout.tsx), which renders the Header, the page, and the Footer. [globals.css](../src/app/globals.css) makes `<main>` at least one full screen tall and stretches the page's last section to fill it, so the Footer stays below the fold on short pages. Pages don't need their own `minHeight`.
 
 | Path | Files | Notes |
 | --- | --- | --- |
 | `/` | [app/page.tsx](../src/app/page.tsx) | Stacked Home page Sections from [components/home/](../src/components/home/). |
-| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx). The "Add your Group", "View Group", and "Join" buttons are placeholders with no action yet. |
+| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. The "Add your Group" and "Join" buttons are placeholders with no action yet. |
+| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, prerendered at build time from `generateStaticParams`. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, Join) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
 | `/contact` | [app/contact/page.tsx](../src/app/contact/page.tsx) | Renders [components/contact/ContactPage.tsx](../src/components/contact/ContactPage.tsx): form posted to Formspree. The endpoint is still a placeholder. |
 | anything else | [app/not-found.tsx](../src/app/not-found.tsx) | 404 page with a link home. |
 
@@ -44,11 +45,12 @@ src/
   components/
     layout/     Site-wide: Header, Footer, ThemeRegistry
     home/       Home page Sections: Hero, Mission, IAmNow, Merch, Community, Socials
-    groups/     Groups page (and future Group page) components
+    groups/     Groups page and Group page components
     contact/    Contact page components
     icons/      Custom icons not in MUI
   data/         Static content: clubs.json + groups.ts (Groups), navLinks.ts
-  types/        Shared TypeScript types (e.g. `Group`)
+  lib/          Non-UI logic shared by pages (e.g. viewer.ts: who is looking at a Group page)
+  types/        Shared TypeScript types (e.g. `Group`, `User`)
   theme.ts      Brand colors (`colors`) and MUI theme
 ```
 
@@ -58,7 +60,7 @@ Don't create `src/pages/`: Next.js would treat it as the old Pages Router.
 
 ## Group data
 
-Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Import them through [src/data/groups.ts](../src/data/groups.ts) (`GROUPS`), which types them with the `Group` type from [src/types/group.ts](../src/types/group.ts). Adding or editing a Group currently means editing this file and redeploying.
+Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Import them through [src/data/groups.ts](../src/data/groups.ts) (`GROUPS`, `getGroup(id)`, `DEFAULT_GROUP_IMAGE`), which types them with the `Group` type from [src/types/group.ts](../src/types/group.ts) and drops any links past `MAX_GROUP_LINKS` (3). Adding or editing a Group currently means editing this file and redeploying.
 
 ```json
 {
@@ -69,11 +71,21 @@ Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Import
   "state": "MA",                 // drives the state filter
   "country": "USA",
   "description": "...",
-  "website": "https://...",      // for the future Group page; not shown on the card
   "tags": ["masters", "..."],    // searchable on the Groups page
-  "image": "/groups/....jpg"     // optional Group image; defaults to /logos/OGTC_OGoatG_KC.svg
+  "ownerId": "site-admin",       // required; the User who can edit the Group (see below)
+  "links": [                     // up to 3, shown on the Group page; icon picked from the URL's site
+    { "label": "Website", "url": "https://..." }
+  ],
+  "image": "/groups/....jpg",    // optional Group image; defaults to /logos/OGTC_OGoatG_KC.svg
+  "banner": "/groups/....jpg"    // optional Group banner; defaults to a branded navy banner
 }
 ```
+
+Every Group has an Owner. Groups listed before Accounts existed are owned by the placeholder `"site-admin"` until someone claims them.
+
+## Who is viewing (groundwork for Accounts)
+
+[src/lib/viewer.ts](../src/lib/viewer.ts) decides how the person looking at a Group page relates to it. `getCurrentUser()` returns the signed-in User (always `null` until **Accounts**), and `getGroupRole(group, user)` turns that into a `GroupRole`: `visitor`, `user`, `member` (once **Joining** exists), or `owner`. The Group page's server component works out the role and passes it down, so members-only content and Owner controls can be added by checking the role without restructuring the page. Members-only data must still be checked on the server, never only hidden in the UI.
 
 ## Checks (required before work is done)
 
