@@ -52,7 +52,7 @@ This describes the site we are building toward, not only what exists today. Term
 | Term | Meaning |
 | --- | --- |
 | **Home page** | `/`. Made of sections: Hero, Mission, I Am Now, Merch, Community, Socials. |
-| **Section** | One of the stacked blocks on the Home page, each a component in [src/components/](../src/components/). |
+| **Section** | One of the stacked blocks on the Home page, each a component in [src/components/home/](../src/components/home/). |
 | **Contact page** | `/contact`. A form sent through Formspree. |
-| **Header / Footer** | Site-wide navigation and footer, shown on every page. Nav links live in [src/data/navLinks.js](../src/data/navLinks.js). |
-| **Theme** | Brand colors and MUI settings in [src/theme.js](../src/theme.js). |
+| **Header / Footer** | Site-wide navigation and footer, shown on every page. Nav links live in [src/data/navLinks.ts](../src/data/navLinks.ts). |
+| **Theme** | Brand colors and MUI settings in [src/theme.ts](../src/theme.ts). |

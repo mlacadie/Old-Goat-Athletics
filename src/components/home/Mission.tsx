@@ -2,7 +2,7 @@ import { Box, Container, Grid, Typography, Stack, Paper } from '@mui/material'
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import BoltIcon from '@mui/icons-material/Bolt'
-import { colors } from '../theme.js'
+import { colors } from '../../theme'
 
 const PILLARS = [
   {

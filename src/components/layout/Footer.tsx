@@ -5,9 +5,9 @@ import Link from 'next/link'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import XIcon from '@mui/icons-material/X'
-import TikTokIcon from '../icons/TikTokIcon.jsx'
-import { colors } from '../theme.js'
-import { NAV_LINKS } from '../data/navLinks.js'
+import TikTokIcon from '../icons/TikTokIcon'
+import { colors } from '../../theme'
+import { NAV_LINKS } from '../../data/navLinks'
 
 const SOCIAL_ICONS = [
   { name: 'instagram', Icon: InstagramIcon },

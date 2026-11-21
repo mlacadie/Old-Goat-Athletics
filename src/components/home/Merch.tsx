@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Stack, Chip } from '@mui/material'
-import { colors } from '../theme.js'
+import { colors } from '../../theme'
 
 export default function Merch() {
   return (

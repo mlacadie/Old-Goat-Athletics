@@ -4,7 +4,7 @@ import { Box, Container, Grid, Typography, Button, Stack, Paper } from '@mui/mat
 import Link from 'next/link'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
-import { colors } from '../theme.js'
+import { colors } from '../../theme'
 
 export default function Community() {
   return (
