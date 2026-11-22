@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import GroupsPage from '../../components/groups/GroupsPage'
-import { listGroups } from '../../lib/groups'
+import { listGroupsFor } from '../../lib/groups'
+import { getCurrentUserId } from '../../lib/viewer'
 
 export const metadata: Metadata = {
   title: 'Groups | Old Goat Athletics',
@@ -11,5 +12,6 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  return <GroupsPage groups={await listGroups()} />
+  const userId = await getCurrentUserId()
+  return <GroupsPage groups={await listGroupsFor(userId)} signedIn={userId !== null} />
 }

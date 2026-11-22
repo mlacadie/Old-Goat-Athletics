@@ -20,8 +20,10 @@ Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [
 | Path | Files | Notes |
 | --- | --- | --- |
 | `/` | [app/page.tsx](../src/app/page.tsx) | Stacked Home page Sections from [components/home/](../src/components/home/). |
-| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Rendered per request from the database (`listGroups()`), so new Groups show up right away. Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. The "Add your Group" and "Join" buttons are placeholders with no action yet. |
-| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, loaded with `getGroup(id)` and rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, Join) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
+| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Rendered per request from the database (`listGroupsFor(userId)`), so new Groups show up right away. Each Group is sent to the browser as a `GroupListing`: no `ownerId`, just `isOwner` for the viewer. Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. "Add your Group" opens `/groups/new`. Cards for the viewer's own Groups get a **Your Group** badge and an **Edit Group** button in place of Join. "Join" is a placeholder with no action yet. |
+| `/groups/new` | [app/groups/new/page.tsx](../src/app/groups/new/page.tsx), [app/groups/actions.ts](../src/app/groups/actions.ts) | Signed-in Users only. The Add a Group form ([GroupForm.tsx](../src/components/groups/GroupForm.tsx)). The `addGroup` server action saves it with the User as Group Owner and opens the new Group page. New Groups appear right away (Site Admin approval comes with **Group Approval**). |
+| `/groups/[groupId]/edit` | [app/groups/[groupId]/edit/page.tsx](../src/app/groups/[groupId]/edit/page.tsx) | Signed-in Users only. The same form, filled in, for the Group Owner, opened from **Edit Group** on the Group page. Anyone else gets "Group not found". The `editGroup` server action checks ownership again before saving. The Group's id never changes. |
+| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, loaded with `getGroup(id)` and rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, and Join; Owners get a **Your Group** badge and **Edit Group** instead) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
 | `/sign-in`, `/sign-up` | [app/sign-in/[[...sign-in]]/page.tsx](../src/app/sign-in/[[...sign-in]]/page.tsx), [app/sign-up/[[...sign-up]]/page.tsx](../src/app/sign-up/[[...sign-up]]/page.tsx) | Clerk's `<SignIn>` / `<SignUp>` forms inside [AccountSection.tsx](../src/components/account/AccountSection.tsx). Catch-all folders because Clerk adds its own sub-steps (e.g. `/sign-in/factor-one`). |
 | `/profile` | [app/profile/page.tsx](../src/app/profile/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) with hash routing (tabs switch in the browser, e.g. `/profile#/security`) plus our own Notifications tab ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
 | `/api/webhooks/clerk` | [app/api/webhooks/clerk/route.ts](../src/app/api/webhooks/clerk/route.ts) | Clerk calls this on account create, update, and delete; keeps the `users` table in sync. |
@@ -54,41 +56,47 @@ src/
     groups/     Groups page and Group page components
     contact/    Contact page components
     icons/      Custom icons not in MUI
-  data/         Static content and constants: groups.ts (Group constants), navLinks.ts
+  data/         Static content and constants: groups.ts (Group constants), sports.ts (Sport list), places.ts (countries, US states, Canadian provinces), navLinks.ts
   db/           Database: schema.ts (Drizzle tables) and index.ts (the `db` client)
-  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; groups.ts: groups table; displayName.ts)
+  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; groups.ts: groups table; groupForm.ts: Add / Edit Group form checks; displayName.ts)
   types/        Shared TypeScript types (e.g. `Group`, `User`)
   theme.ts      Brand colors (`colors`) and MUI theme
   proxy.ts      Clerk on every request; protects User-only routes (Next.js 16's name for middleware)
 drizzle/        Generated SQL migrations (committed)
 ```
 
-New components go in the folder for the page that uses them. Components shared by several pages go in a folder named for what they are (e.g. `components/common/`) once there is more than one.
+New components go in the folder for the page that uses them. Components shared by several pages go in a folder named for what they are (e.g. `components/common/`) once there is more than one. Styles repeated across Group components (section labels, hero buttons and badges) live in [components/groups/styles.ts](../src/components/groups/styles.ts). Build Group URLs with `groupPath(id)`, `editGroupPath(id)`, and `ADD_GROUP_PATH` from [data/groups.ts](../src/data/groups.ts), never by hand.
 
 Don't create `src/pages/`: Next.js would treat it as the old Pages Router.
 
 ## Group data
 
-Groups live in the **`groups`** table (see **Database**). Server code reads them through [src/lib/groups.ts](../src/lib/groups.ts) (`listGroups()`, `getGroup(id)`), which turns each row into the `Group` type from [src/types/group.ts](../src/types/group.ts): empty columns become missing fields, and links past `MAX_GROUP_LINKS` (3) are dropped. Client components never query the database; pages pass Groups to them as props. [src/data/groups.ts](../src/data/groups.ts) holds the constants both sides use (`DEFAULT_GROUP_IMAGE`, `MAX_GROUP_LINKS`).
+Groups live in the **`groups`** table (see **Database**). Server code reads them through [src/lib/groups.ts](../src/lib/groups.ts) (`listGroups()`, `getGroup(id)`), which turns each row into the `Group` type from [src/types/group.ts](../src/types/group.ts): empty columns become missing fields, and links past `MAX_GROUP_LINKS` (3) are dropped. Client components never query the database; pages pass Groups to them as props. Owner ids never reach the browser: the Groups page works out ownership on the server. [src/data/groups.ts](../src/data/groups.ts) holds the constants both sides use (`DEFAULT_GROUP_IMAGE`, `MAX_GROUP_LINKS`).
 
 | Column | Notes |
 | --- | --- |
 | `id` | Unique, URL-safe slug, e.g. `old-goat-track-club`. Also the Group page path. |
 | `name`, `description` | Required. |
 | `sport` | Required. Drives the sport pills. |
-| `city`, `state`, `country` | Optional. `state` drives the state filter. |
+| `country` | ISO 3166-1 alpha-2 code (`US`), picked from the list in [places.ts](../src/data/places.ts). |
+| `state` | Postal abbreviation (`MA`) picked from a list in the US and Canada; optional free text elsewhere. Drives the state filter. |
+| `city` | Typed, with suggestions from cities other Groups use (`listKnownCities()`). All-lowercase or all-caps input is capitalized. |
 | `tags` | Text array, searchable on the Groups page. |
 | `links` | JSON array of up to 3 `{ label, url }`, shown on the Group page. The icon is picked from the URL's site. |
 | `image`, `banner` | Optional. Without them the Group card uses `/logos/OGTC_OGoatG_KC.svg` and the Group page a branded navy banner. |
 | `owner_id` | Required: the Group Owner's Clerk user id. Not a foreign key to `users`, because placeholder Groups use `"site-admin"`. |
 | `created_at`, `updated_at` | The Groups page lists Groups oldest first. |
 
+**Adding and editing.** The form posts to the server actions in [app/groups/actions.ts](../src/app/groups/actions.ts), which read the signed-in User from Clerk and check every field with `parseGroupForm()` in [groupForm.ts](../src/lib/groupForm.ts). That covers required fields (name, sport, description, country, city, and state in the US and Canada), length limits (`GROUP_LIMITS`), a sport from the Sport list, a country and state from the lists in [places.ts](../src/data/places.ts), at most 3 links, and http(s)-only link URLs ("instagram.com/x" gets `https://` added). Then they call `createGroup()` or `updateGroup()` in [lib/groups.ts](../src/lib/groups.ts). A new Group's id is a slug of its name, with `-2`, `-3`, ... added if taken (`new` is reserved). `updateGroup()` only writes when the User owns the Group.
+
+**Sport list:** [src/data/sports.ts](../src/data/sports.ts), alphabetical with **Other** last. Add sports there as they come up. The form links "Don't see your sport?" to the Contact page in a new tab.
+
 Every Group has an Owner. The three placeholder Groups, seeded by a migration so the site has something to show while testing, are owned by `"site-admin"`.
 
 ## Accounts
 
 - **Clerk owns sign-in.** Users sign in with an email code, a password, or Google (switched on in the Clerk dashboard, not in code). Names are Clerk's optional first and last name. [layout.tsx](../src/app/layout.tsx) wraps the app in `<ClerkProvider>`, which points at our `/sign-in` and `/sign-up` pages and styles Clerk's forms with the theme's navy, font, and corner radius.
-- **[proxy.ts](../src/proxy.ts)** runs Clerk on every request. Every page is public except those in `isUserOnlyRoute` (currently `/profile`), which send Visitors to sign in.
+- **[proxy.ts](../src/proxy.ts)** runs Clerk on every request. Every page is public except those in `isUserOnlyRoute` (currently `/profile`, `/groups/new`, and `/groups/<id>/edit`), which send Visitors to sign in. The proxy is given `signInUrl` and `signUpUrl` so that redirect goes to our `/sign-in` page; without them Clerk redirects to its hosted page on another domain, which errors during client-side navigation. Buttons that lead to a User-only page (e.g. "Add your Group") link Visitors straight to `/sign-in?redirect_url=...` instead.
 - **Header:** Visitors get **Sign in** (and **Sign up** in the mobile menu); signed-in Users get Clerk's `<UserButton>` avatar menu with Profile and Sign out. It uses Clerk's `useAuth()` because the Header is a client component.
 - **Display name:** first and last name, or `"Old Goat"` if neither is set. Never fall back to the email: the Members list must not show contact info. Lives in `getDisplayName()` in [displayName.ts](../src/lib/displayName.ts).
 - **Phone numbers** are not collected yet (deferred past the January release), so Notifications are email-only.

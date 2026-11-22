@@ -4,10 +4,14 @@ import Link from 'next/link'
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import { colors } from '../../theme'
-import { DEFAULT_GROUP_IMAGE } from '../../data/groups'
-import type { Group } from '../../types/group'
+import { DEFAULT_GROUP_IMAGE, editGroupPath, groupPath } from '../../data/groups'
+import type { GroupListing } from '../../types/group'
+import YourGroupChip from './YourGroupChip'
 
-export default function GroupCard({ group }: { group: Group }) {
+const actionButtonSx = { flex: 1, px: 2 }
+
+/** One Group's tile on the Groups page. The viewer's own Groups are marked and get Edit Group instead of Join. */
+export default function GroupCard({ group }: { group: GroupListing }) {
   const location = [group.city, group.state].filter(Boolean).join(', ')
 
   return (
@@ -56,16 +60,14 @@ export default function GroupCard({ group }: { group: Group }) {
       </Box>
 
       <Stack spacing={1} sx={{ p: 3, pt: 2.75, flexGrow: 1 }}>
-        <Chip
-          label={group.sport}
-          size="small"
-          sx={{
-            alignSelf: 'flex-start',
-            bgcolor: 'rgba(0,50,100,0.1)',
-            color: colors.navy,
-            fontWeight: 700,
-          }}
-        />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Chip
+            label={group.sport}
+            size="small"
+            sx={{ bgcolor: 'rgba(0,50,100,0.1)', color: colors.navy, fontWeight: 700 }}
+          />
+          {group.isOwner && <YourGroupChip tone="light" />}
+        </Stack>
         <Typography variant="h5" component="h2" sx={{ color: colors.navyDarker, fontSize: '1.25rem' }}>
           {group.name}
         </Typography>
@@ -81,18 +83,22 @@ export default function GroupCard({ group }: { group: Group }) {
         <Stack direction="row" spacing={1.25} sx={{ pt: 1.5 }}>
           <Button
             component={Link}
-            href={`/groups/${group.id}`}
+            href={groupPath(group.id)}
             variant="outlined"
-            sx={{ flex: 1, color: colors.navy, borderColor: colors.navy, px: 2 }}
+            sx={{ ...actionButtonSx, color: colors.navy, borderColor: colors.navy }}
           >
             View Group
           </Button>
-          <Button
-            variant="contained"
-            sx={{ flex: 1, bgcolor: colors.navy, px: 2, '&:hover': { bgcolor: colors.navyDark } }}
-          >
-            Join
-          </Button>
+          {group.isOwner ? (
+            <Button component={Link} href={editGroupPath(group.id)} variant="contained" sx={actionButtonSx}>
+              Edit Group
+            </Button>
+          ) : (
+            // Joining: wire this up.
+            <Button variant="contained" sx={actionButtonSx}>
+              Join
+            </Button>
+          )}
         </Stack>
       </Stack>
     </Paper>

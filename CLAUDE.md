@@ -20,6 +20,7 @@ Do not start the dev server; the user checks the app manually.
 
 Follow [CONTRIBUTING.md](CONTRIBUTING.md) for branches, commits, pull requests, and issues. In short:
 
+- **Never commit, push, or open a pull request unless the user says so.** Leave finished work uncommitted and tell the user it's ready.
 - One feature, fix, removal, or refactor per branch and PR.
 - Imperative commit messages with no prefixes (`Add Group page route`, not `feat: ...`). Nothing starts with `codex/`.
 - PR description is just a summary, plus `Closes #<number>`. Close issues and move them to Done on the board when complete.

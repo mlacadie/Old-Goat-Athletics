@@ -16,7 +16,9 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #13 | **TypeScript** | Convert the codebase to TypeScript (`strict`), with no behavior changes | Next.js Migration | Done |
 | #1 | **Accounts** | Sign up, sign in, sign out, profile with contact info | Next.js Migration | Done |
 | #2 | **Group Pages** | Each Group gets its own page, opened from its Group card | Next.js Migration | Done |
-| #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Planned |
+| #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Done |
+| #19 | **Group Approval** | A Site Admin approves new Groups before they're listed. **Needed before launch.** | Add a Group | Planned |
+| #20 | **Group Images** | Owners upload a Group image and Group banner | Add a Group | Planned |
 | #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
 | #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
 | #6 | **Announcements** | Group Owners post updates to their Group | Members-only Content | Planned |
@@ -26,7 +28,7 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #10 | **Group View Redesign** | Redesign the Groups page and Group page for Members and Owners | Group Pages | Planned |
 | #11 | **Shopify Store** | Replace the Merch placeholder with a real store | – | Planned |
 
-**Suggested build order:** Next.js Migration → TypeScript → Group Pages → Accounts → Add a Group → Joining → Members-only Content → Announcements → Events & Calendar → Notifications. **Group View Redesign** and **Site Redesign** follow the features they depend on. **Shopify Store** can happen any time after the migration.
+**Suggested build order:** Next.js Migration → TypeScript → Group Pages → Accounts → Add a Group → Group Approval (before launch) → Joining → Members-only Content → Announcements → Events & Calendar → Notifications. **Group View Redesign** and **Site Redesign** follow the features they depend on. **Shopify Store** can happen any time after the migration.
 
 When a feature ships, change its status here, close its issue, and remove the **(planned)** marker from its terms in the glossary.
 
@@ -91,11 +93,31 @@ When a feature ships, change its status here, close its issue, and remove the **
 - The form uses the same fields the Groups page already uses: name, sport, city, state, country, description, tags.
 - The form prompts the Owner for up to 3 optional **Group links** (label + URL), such as the Group's website, Instagram, or Strava.
 - **Sport** is picked from a set list of sports that we maintain, not typed in, so the Groups page's sport filter stays clean (no "Running" and "running" as separate pills). **Other** is always the last option in the list. The list lives in the code (e.g. `src/data/sports.ts`) and grows as new sports come up.
-- The form also takes an optional **Group image** (shown on the Group card and Group page) and an optional **Group banner** (shown across the top of the Group page). If either is left out, the default Group image (`public/logos/OGTC_OGoatG_KC.svg`) is used.
-- The Group Owner can edit their Group's info later, including replacing or removing the image and banner.
-- New Groups appear on the Groups page with the existing ones.
+- The Group Owner can edit their Group's info and links later, from **Edit Group** on the Group page.
+- New Groups appear on the Groups page with the existing ones, **right away**. Approval comes later with **Group Approval**.
+- Group image and banner uploads are split out into **Group Images**.
+- The three Groups that were in `clubs.json` are test placeholders owned by `"site-admin"`. There is no claiming flow.
 
 **Done when:** a User can add a Group, see it on the Groups page, open its Group page, and edit it.
+
+## 3b. Group Approval
+
+**What it is:** Before the site goes live, a Site Admin approves new Groups so nobody can list just anything (spam, duplicates, junk).
+
+- New Groups start as **pending**: hidden from the Groups page, but their Owner can see and edit them.
+- A Site Admin sees pending Groups and approves or rejects each one.
+- Decide how someone becomes a Site Admin (e.g. an `admin` role in Clerk public metadata), whether editing an approved Group sends it back for review, and whether the Owner gets an email when their Group is approved or rejected.
+
+**Done when:** a Group added by a User only appears on the Groups page after a Site Admin approves it.
+
+## 3c. Group Images
+
+**What it is:** Group Owners upload an optional **Group image** (shown on the Group card and Group page) and an optional **Group banner** (shown across the top of the Group page) when adding or editing a Group. Without them the default Group image (`public/logos/OGTC_OGoatG_KC.svg`) is used, as today.
+
+- Likely stored in **Vercel Blob** (a Blob store in Vercel adds `BLOB_READ_WRITE_TOKEN`).
+- Replacing or removing an image deletes the old file.
+
+**Done when:** an Owner can add, replace, and remove their Group's image and banner, and they show on the Group card and Group page.
 
 ## 4. Joining
 
@@ -238,8 +260,8 @@ Decide these before or while building the feature in brackets.
 
 1. **[Joining]** Can anyone join instantly, or does the Group Owner approve requests?
 2. **[Announcements / Events]** Can only the Owner post, or can they promote Members to co-admins?
-3. **[Add a Group]** Do new Groups appear immediately, or does a Site Admin approve them first? How do we handle duplicates and spam?
-4. ~~**[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?~~ Every Group has a required Owner. Existing Groups are owned by the Site Admin (`"site-admin"`) until claimed. How claiming works is decided with **Add a Group**.
+3. ~~**[Add a Group]** Do new Groups appear immediately, or does a Site Admin approve them first?~~ Immediately for now. Site Admin approval is required before launch (**Group Approval**), which also handles duplicates and spam.
+4. ~~**[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?~~ They are test placeholders owned by `"site-admin"`. No claiming flow is needed.
 5. **[Accounts]** What happens to a Group if its Owner leaves or deletes their account? Can ownership transfer?
 6. ~~**[Accounts]** Is the phone number required, optional, or only asked for if the User wants texts?~~ Not collected for the January release. Revisit with **Notifications** when texts are added.
 7. **[Notifications]** Can Members choose a channel per Group, mute a Group, or get a digest instead of every post?
@@ -249,4 +271,4 @@ Decide these before or while building the feature in brackets.
 11. ~~**[Next.js Migration]** Is there a custom domain to move?~~ No domain yet; the site uses its Vercel URL for now.
 12. **[Shopify Store]** Does the Shopify store already exist? Link out or show products on the site? Do Members get perks?
 13. **[Site Redesign]** Should signed-in Users get a different Home page?
-14. **[Add a Group]** Where are uploaded Group images and banners stored, and what are the limits (file types, max size, crop or aspect ratio)? Do they need moderation?
+14. **[Group Images]** Where are uploaded Group images and banners stored, and what are the limits (file types, max size, crop or aspect ratio)? Do they need moderation?
