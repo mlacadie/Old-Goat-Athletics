@@ -203,7 +203,7 @@ export default function GroupsPage({ groups, signedIn }: { groups: GroupListing[
           <Grid container spacing={3}>
             {filtered.map((group) => (
               <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <GroupCard group={group} />
+                <GroupCard group={group} signedIn={signedIn} />
               </Grid>
             ))}
           </Grid>

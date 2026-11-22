@@ -1,17 +1,17 @@
 'use client'
 
 import Link from 'next/link'
-import { Button, Chip, Stack } from '@mui/material'
-import CheckIcon from '@mui/icons-material/Check'
+import { Button, Stack } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import { editGroupPath } from '../../data/groups'
 import type { GroupRole } from '../../lib/viewer'
+import JoinButton from './JoinButton'
 import YourGroupChip from './YourGroupChip'
-import { heroButtonSx, heroChipSx } from './styles'
+import { heroButtonSx } from './styles'
 
 /**
  * What the Group page's hero offers the viewer: Your Group and Edit Group for the Owner, a Member
- * badge for Members, Join for everyone else.
+ * badge and Leave for Members, Join for everyone else (Visitors sign in first).
  *
  * A client component on purpose: MUI's Chip only draws an `icon` it can see as a React element, and
  * an icon passed down from a server component arrives as a lazy reference, so the Chip drops it.
@@ -33,11 +33,5 @@ export default function GroupActions({ groupId, role }: { groupId: string; role:
       </Stack>
     )
   }
-  if (role === 'member') return <Chip icon={<CheckIcon />} label="Member" sx={heroChipSx} />
-  // Joining: wire this up. Visitors are asked to sign in first.
-  return (
-    <Button variant="contained" sx={heroButtonSx}>
-      Join Group
-    </Button>
-  )
+  return <JoinButton groupId={groupId} status={role} tone="hero" />
 }

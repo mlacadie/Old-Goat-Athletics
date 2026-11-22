@@ -6,13 +6,21 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import { colors } from '../../theme'
 import { DEFAULT_GROUP_IMAGE, editGroupPath, groupPath } from '../../data/groups'
 import type { GroupListing } from '../../types/group'
+import JoinButton, { type JoinStatus } from './JoinButton'
+import MemberChip from './MemberChip'
 import YourGroupChip from './YourGroupChip'
 
 const actionButtonSx = { flex: 1, px: 2 }
 
-/** One Group's tile on the Groups page. The viewer's own Groups are marked and get Edit Group instead of Join. */
-export default function GroupCard({ group }: { group: GroupListing }) {
+/**
+ * One Group's tile on the Groups page. The viewer's own Groups are marked and get Edit Group
+ * instead of Join; Groups they joined are marked Member and get Leave.
+ */
+export default function GroupCard({ group, signedIn }: { group: GroupListing; signedIn: boolean }) {
   const location = [group.city, group.state].filter(Boolean).join(', ')
+  let joinStatus: JoinStatus = 'visitor'
+  if (group.isMember) joinStatus = 'member'
+  else if (signedIn) joinStatus = 'user'
 
   return (
     <Paper
@@ -67,6 +75,7 @@ export default function GroupCard({ group }: { group: GroupListing }) {
             sx={{ bgcolor: 'rgba(0,50,100,0.1)', color: colors.navy, fontWeight: 700 }}
           />
           {group.isOwner && <YourGroupChip tone="light" />}
+          {group.isMember && <MemberChip tone="light" />}
         </Stack>
         <Typography variant="h5" component="h2" sx={{ color: colors.navyDarker, fontSize: '1.25rem' }}>
           {group.name}
@@ -94,10 +103,7 @@ export default function GroupCard({ group }: { group: GroupListing }) {
               Edit Group
             </Button>
           ) : (
-            // Joining: wire this up.
-            <Button variant="contained" sx={actionButtonSx}>
-              Join
-            </Button>
+            <JoinButton groupId={group.id} status={joinStatus} tone="card" />
           )}
         </Stack>
       </Stack>

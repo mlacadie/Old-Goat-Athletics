@@ -38,8 +38,21 @@ export interface KnownCity {
 
 /**
  * A Group as the Groups page sends it to the browser: without the Owner's user id, which stays on
- * the server, but with whether the viewer owns it.
+ * the server, but with whether the viewer owns it or has joined it.
  */
 export interface GroupListing extends Omit<Group, 'ownerId'> {
+  isOwner: boolean
+  /** The viewer joined this Group. False for the Owner, who is a Member by owning it. */
+  isMember: boolean
+}
+
+/** A Group in My Groups on the profile: one the User owns or has joined. */
+export interface MyGroup {
+  id: string
+  name: string
+  sport: string
+  /** "City, ST", or empty when the Group has no city or state. */
+  location: string
+  /** The User owns this Group; otherwise they joined it. */
   isOwner: boolean
 }

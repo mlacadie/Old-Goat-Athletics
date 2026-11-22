@@ -1,6 +1,6 @@
 import 'server-only'
 import { eq, sql } from 'drizzle-orm'
-import type { User as ClerkUser, UserJSON } from '@clerk/nextjs/server'
+import { currentUser, type User as ClerkUser, type UserJSON } from '@clerk/nextjs/server'
 import { getDb } from '../db'
 import { users } from '../db/schema'
 import { getDisplayName } from './displayName'
@@ -46,6 +46,19 @@ export async function syncUser({ id, displayName, email }: UserRecord): Promise<
       set: { displayName, email, updatedAt: new Date() },
       setWhere: sql`(${users.displayName}, ${users.email}) is distinct from (excluded.display_name, excluded.email)`,
     })
+}
+
+/**
+ * Makes sure the signed-in User has a row, which tables like memberships point to. The webhook
+ * usually created it already; if not (local development, a missed webhook), it's made from
+ * their Clerk account, which costs a call to Clerk only in that case.
+ */
+export async function ensureUser(userId: string): Promise<void> {
+  const [row] = await getDb().select({ id: users.id }).from(users).where(eq(users.id, userId))
+  if (row) return
+  const clerkUser = await currentUser()
+  if (clerkUser?.id !== userId) throw new Error('Signed-in User not found in Clerk.')
+  await syncUser(userRecordFromClerk(clerkUser))
 }
 
 export async function deleteUser(userId: string): Promise<void> {

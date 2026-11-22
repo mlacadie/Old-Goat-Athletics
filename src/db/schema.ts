@@ -1,4 +1,4 @@
-import { boolean, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, index, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import type { GroupLink } from '../types/group'
 
 /**
@@ -41,3 +41,26 @@ export const groups = pgTable('groups', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+/**
+ * A Membership: a User who joined a Group, which makes them a Member. Each User joins a Group at
+ * most once. The Group Owner has no row here: owning a Group already makes them a Member (see
+ * `groups.ownerId`). Rows go away when their User or Group is deleted.
+ */
+export const memberships = pgTable(
+  'memberships',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    groupId: text('group_id')
+      .notNull()
+      .references(() => groups.id, { onDelete: 'cascade' }),
+    joinedAt: timestamp('joined_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.groupId] }),
+    // The primary key covers "this User's Groups"; this covers "this Group's Members".
+    index('memberships_group_id_idx').on(table.groupId),
+  ],
+)

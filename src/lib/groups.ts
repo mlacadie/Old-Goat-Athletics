@@ -6,6 +6,7 @@ import { groups } from '../db/schema'
 import { MAX_GROUP_LINKS } from '../data/groups'
 import type { Group, GroupListing, KnownCity } from '../types/group'
 import type { GroupInput } from './groupForm'
+import { listJoinedGroupIds } from './memberships'
 import { getGroupRole } from './viewer'
 
 /** Paths under /groups that a Group id must never take. */
@@ -101,8 +102,17 @@ export async function listKnownCities(): Promise<KnownCity[]> {
   return rows.flatMap((row) => (row.city ? [{ ...row, city: row.city }] : []))
 }
 
-/** Every Group for the Groups page, marked with whether `userId` owns it. Owner ids stay on the server. */
+/**
+ * Every Group for the Groups page, marked with whether `userId` owns it or has joined it. Owner ids
+ * stay on the server.
+ */
 export async function listGroupsFor(userId: string | null): Promise<GroupListing[]> {
-  const all = await listGroups()
-  return all.map(({ ownerId, ...group }) => ({ ...group, isOwner: getGroupRole({ ...group, ownerId }, userId) === 'owner' }))
+  const [all, joined] = await Promise.all([
+    listGroups(),
+    userId ? listJoinedGroupIds(userId) : new Set<string>(),
+  ])
+  return all.map(({ ownerId, ...group }) => {
+    const role = getGroupRole({ ownerId }, userId, joined.has(group.id))
+    return { ...group, isOwner: role === 'owner', isMember: role === 'member' }
+  })
 }

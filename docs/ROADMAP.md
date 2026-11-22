@@ -19,7 +19,7 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #3 | **Add a Group** | Signed-in Users add their own Group to the directory | Accounts | Done |
 | #19 | **Group Approval** | A Site Admin approves new Groups before they're listed. **Needed before launch.** | Add a Group | Planned |
 | #20 | **Group Images** | Owners upload a Group image and Group banner | Add a Group | Planned |
-| #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Planned |
+| #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Done |
 | #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
 | #6 | **Announcements** | Group Owners post updates to their Group | Members-only Content | Planned |
 | #7 | **Events & Calendar** | Group Owners post Events; Group page shows upcoming ones | Members-only Content | Planned |
@@ -126,7 +126,8 @@ When a feature ships, change its status here, close its issue, and remove the **
 - A **Join** button on the Group page and on each Group card. Visitors are asked to sign in first.
 - Members see a **Leave** button instead.
 - Joining a Group also turns on its Notifications. Join and subscribe are the same action.
-- A User can see the Groups they've joined (e.g. "My Groups" on their profile).
+- A User can see the Groups they've joined, and the ones they own, in **My Groups** on their profile, filtered by All / Owned / Joined.
+- **Decided:** anyone can join instantly (no Owner approval). The Group Owner counts as a Member by owning the Group, with no separate Membership. Leave takes effect right away, without a confirmation. No member counts are shown.
 
 **Done when:** a User can join and leave Groups, and the Group page reflects whether they're a Member.
 
@@ -230,7 +231,7 @@ Notification ──> User (recipient), Announcement | Event (source)
 | --- | --- |
 | **User** | id, display name, email, phone (optional), notification preferences, created at |
 | **Group** | id (slug), name, sport, city, state, country, description, tags, links (up to 3, each label + URL), image (optional), banner (optional), owner (User, required), created at |
-| **Membership** | user, group, role (`member` / `owner`, later maybe `admin`), joined at |
+| **Membership** | user, group, joined at. Stored in the `memberships` table. The Owner has no Membership (ownership is `Group.owner`); a role column (e.g. co-admins) may come later. |
 | **Announcement** | id, group, author, title, body, created/updated at |
 | **Event** | id, group, author, title, description, location, starts at, ends at, cancelled |
 | **Notification** | id, recipient, source (Announcement/Event), channel, sent at, status |
@@ -258,7 +259,7 @@ From **Accounts** onward we also need:
 
 Decide these before or while building the feature in brackets.
 
-1. **[Joining]** Can anyone join instantly, or does the Group Owner approve requests?
+1. ~~**[Joining]** Can anyone join instantly, or does the Group Owner approve requests?~~ Instantly. Owner approval can be added later if Groups need it.
 2. **[Announcements / Events]** Can only the Owner post, or can they promote Members to co-admins?
 3. ~~**[Add a Group]** Do new Groups appear immediately, or does a Site Admin approve them first?~~ Immediately for now. Site Admin approval is required before launch (**Group Approval**), which also handles duplicates and spam.
 4. ~~**[Add a Group]** The Groups already in `clubs.json` have no Owner. Are they claimed by someone, owned by a Site Admin, or left read-only?~~ They are test placeholders owned by `"site-admin"`. No claiming flow is needed.

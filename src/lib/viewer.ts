@@ -17,9 +17,12 @@ export async function getCurrentUserId(): Promise<string | null> {
   return userId
 }
 
-export function getGroupRole(group: Group, userId: string | null): GroupRole {
+/**
+ * The viewer's role in a Group. `hasJoined` says whether the User has a Membership in it; the
+ * Owner is a Member by owning the Group, so it doesn't matter for them.
+ */
+export function getGroupRole(group: Pick<Group, 'ownerId'>, userId: string | null, hasJoined: boolean): GroupRole {
   if (!userId) return 'visitor'
   if (userId === group.ownerId) return 'owner'
-  // Joining: return 'member' when the User has a Membership in this Group.
-  return 'user'
+  return hasJoined ? 'member' : 'user'
 }
