@@ -213,7 +213,7 @@ Notification ──> User (recipient), Announcement | Event (source)
 | **Event** | id, group, author, title, description, location, starts at, ends at, cancelled |
 | **Notification** | id, recipient, source (Announcement/Event), channel, sent at, status |
 
-Group fields deliberately match today's [clubs.json](../src/data/clubs.json) so existing Groups can move straight into the database. `image` and `banner` are new and optional, so existing Groups start with the default Group image.
+Groups are stored in the `groups` table (see [ARCHITECTURE.md](ARCHITECTURE.md)). `image` and `banner` are optional, so Groups without them use the default Group image.
 
 ## Technical direction
 
