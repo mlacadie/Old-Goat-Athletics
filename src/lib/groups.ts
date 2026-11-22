@@ -4,8 +4,9 @@ import { and, asc, eq, isNotNull, like, or } from 'drizzle-orm'
 import { getDb } from '../db'
 import { groups } from '../db/schema'
 import { MAX_GROUP_LINKS } from '../data/groups'
-import type { Group, KnownCity } from '../types/group'
+import type { Group, GroupListing, KnownCity } from '../types/group'
 import type { GroupInput } from './groupForm'
+import { getGroupRole } from './viewer'
 
 /** Paths under /groups that a Group id must never take. */
 const RESERVED_IDS = new Set(['new'])
@@ -98,4 +99,10 @@ export async function listKnownCities(): Promise<KnownCity[]> {
     .where(isNotNull(groups.city))
     .orderBy(asc(groups.city))
   return rows.flatMap((row) => (row.city ? [{ ...row, city: row.city }] : []))
+}
+
+/** Every Group for the Groups page, marked with whether `userId` owns it. Owner ids stay on the server. */
+export async function listGroupsFor(userId: string | null): Promise<GroupListing[]> {
+  const all = await listGroups()
+  return all.map(({ ownerId, ...group }) => ({ ...group, isOwner: getGroupRole({ ...group, ownerId }, userId) === 'owner' }))
 }

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { MAX_GROUP_LINKS } from '../data/groups'
 import { isCountry, REGIONS } from '../data/places'
 import { isSport } from '../data/sports'
@@ -175,4 +176,16 @@ export function parseGroupForm(
       links,
     },
   }
+}
+
+/**
+ * Props that show a form field's error under it, or `hint` when it has none. Spread onto a
+ * TextField: `<TextField {...fieldErrorProps(errors, 'name')} />`.
+ */
+export function fieldErrorProps(
+  errors: GroupFormErrors,
+  field: GroupFormField,
+  hint?: ReactNode,
+): { error: boolean; helperText: ReactNode } {
+  return { error: Boolean(errors[field]), helperText: errors[field] ?? hint }
 }

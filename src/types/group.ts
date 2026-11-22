@@ -35,3 +35,11 @@ export interface KnownCity {
   state: string | null
   country: string | null
 }
+
+/**
+ * A Group as the Groups page sends it to the browser: without the Owner's user id, which stays on
+ * the server, but with whether the viewer owns it.
+ */
+export interface GroupListing extends Omit<Group, 'ownerId'> {
+  isOwner: boolean
+}

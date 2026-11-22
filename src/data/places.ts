@@ -9,6 +9,10 @@ export interface Place {
   name: string
 }
 
+function toPlaces(pairs: [code: string, name: string][]): Place[] {
+  return pairs.map(([code, name]) => ({ code, name }))
+}
+
 /** The country a new Group starts with. */
 export const DEFAULT_COUNTRY = 'US'
 
@@ -16,7 +20,7 @@ export const DEFAULT_COUNTRY = 'US'
 export const COUNTRIES: Place[] = [
   { code: 'US', name: 'United States' },
   { code: 'CA', name: 'Canada' },
-  ...[
+  ...toPlaces([
     ['AF', 'Afghanistan'], ['AL', 'Albania'], ['DZ', 'Algeria'], ['AD', 'Andorra'], ['AO', 'Angola'],
     ['AG', 'Antigua and Barbuda'], ['AR', 'Argentina'], ['AM', 'Armenia'], ['AU', 'Australia'], ['AT', 'Austria'],
     ['AZ', 'Azerbaijan'], ['BS', 'Bahamas'], ['BH', 'Bahrain'], ['BD', 'Bangladesh'], ['BB', 'Barbados'],
@@ -57,10 +61,10 @@ export const COUNTRIES: Place[] = [
     ['UG', 'Uganda'], ['UA', 'Ukraine'], ['AE', 'United Arab Emirates'], ['GB', 'United Kingdom'],
     ['UY', 'Uruguay'], ['UZ', 'Uzbekistan'], ['VU', 'Vanuatu'], ['VA', 'Vatican City'], ['VE', 'Venezuela'],
     ['VN', 'Vietnam'], ['VI', 'U.S. Virgin Islands'], ['YE', 'Yemen'], ['ZM', 'Zambia'], ['ZW', 'Zimbabwe'],
-  ].map(([code, name]) => ({ code, name })),
+  ]),
 ]
 
-const US_STATES: Place[] = [
+const US_STATES = toPlaces([
   ['AL', 'Alabama'], ['AK', 'Alaska'], ['AZ', 'Arizona'], ['AR', 'Arkansas'], ['CA', 'California'],
   ['CO', 'Colorado'], ['CT', 'Connecticut'], ['DE', 'Delaware'], ['DC', 'District of Columbia'],
   ['FL', 'Florida'], ['GA', 'Georgia'], ['HI', 'Hawaii'], ['ID', 'Idaho'], ['IL', 'Illinois'], ['IN', 'Indiana'],
@@ -71,13 +75,13 @@ const US_STATES: Place[] = [
   ['OK', 'Oklahoma'], ['OR', 'Oregon'], ['PA', 'Pennsylvania'], ['RI', 'Rhode Island'], ['SC', 'South Carolina'],
   ['SD', 'South Dakota'], ['TN', 'Tennessee'], ['TX', 'Texas'], ['UT', 'Utah'], ['VT', 'Vermont'],
   ['VA', 'Virginia'], ['WA', 'Washington'], ['WV', 'West Virginia'], ['WI', 'Wisconsin'], ['WY', 'Wyoming'],
-].map(([code, name]) => ({ code, name }))
+])
 
-const CA_PROVINCES: Place[] = [
+const CA_PROVINCES = toPlaces([
   ['AB', 'Alberta'], ['BC', 'British Columbia'], ['MB', 'Manitoba'], ['NB', 'New Brunswick'],
   ['NL', 'Newfoundland and Labrador'], ['NT', 'Northwest Territories'], ['NS', 'Nova Scotia'], ['NU', 'Nunavut'],
   ['ON', 'Ontario'], ['PE', 'Prince Edward Island'], ['QC', 'Quebec'], ['SK', 'Saskatchewan'], ['YT', 'Yukon'],
-].map(([code, name]) => ({ code, name }))
+])
 
 /** Countries where the state is picked from a list, and what that list is called. */
 export const REGIONS: Record<string, { label: string; options: Place[] }> = {

@@ -3,13 +3,15 @@
 import Link from 'next/link'
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import StarIcon from '@mui/icons-material/Star'
 import { colors } from '../../theme'
-import { DEFAULT_GROUP_IMAGE } from '../../data/groups'
-import type { Group } from '../../types/group'
+import { DEFAULT_GROUP_IMAGE, editGroupPath, groupPath } from '../../data/groups'
+import type { GroupListing } from '../../types/group'
+import YourGroupChip from './YourGroupChip'
 
-/** One Group's tile on the Groups page. `isOwner` marks it as the viewer's own Group. */
-export default function GroupCard({ group, isOwner }: { group: Group; isOwner: boolean }) {
+const actionButtonSx = { flex: 1, px: 2 }
+
+/** One Group's tile on the Groups page. The viewer's own Groups are marked and get Edit Group instead of Join. */
+export default function GroupCard({ group }: { group: GroupListing }) {
   const location = [group.city, group.state].filter(Boolean).join(', ')
 
   return (
@@ -64,14 +66,7 @@ export default function GroupCard({ group, isOwner }: { group: Group; isOwner: b
             size="small"
             sx={{ bgcolor: 'rgba(0,50,100,0.1)', color: colors.navy, fontWeight: 700 }}
           />
-          {isOwner && (
-            <Chip
-              icon={<StarIcon />}
-              label="Your Group"
-              size="small"
-              sx={{ bgcolor: colors.navy, color: '#fff', fontWeight: 700, '& .MuiChip-icon': { color: colors.goldLight } }}
-            />
-          )}
+          {group.isOwner && <YourGroupChip tone="light" />}
         </Stack>
         <Typography variant="h5" component="h2" sx={{ color: colors.navyDarker, fontSize: '1.25rem' }}>
           {group.name}
@@ -88,26 +83,19 @@ export default function GroupCard({ group, isOwner }: { group: Group; isOwner: b
         <Stack direction="row" spacing={1.25} sx={{ pt: 1.5 }}>
           <Button
             component={Link}
-            href={`/groups/${group.id}`}
+            href={groupPath(group.id)}
             variant="outlined"
-            sx={{ flex: 1, color: colors.navy, borderColor: colors.navy, px: 2 }}
+            sx={{ ...actionButtonSx, color: colors.navy, borderColor: colors.navy }}
           >
             View Group
           </Button>
-          {isOwner ? (
-            <Button
-              component={Link}
-              href={`/groups/${group.id}/edit`}
-              variant="contained"
-              sx={{ flex: 1, bgcolor: colors.navy, px: 2, '&:hover': { bgcolor: colors.navyDark } }}
-            >
+          {group.isOwner ? (
+            <Button component={Link} href={editGroupPath(group.id)} variant="contained" sx={actionButtonSx}>
               Edit Group
             </Button>
           ) : (
-            <Button
-              variant="contained"
-              sx={{ flex: 1, bgcolor: colors.navy, px: 2, '&:hover': { bgcolor: colors.navyDark } }}
-            >
+            // Joining: wire this up.
+            <Button variant="contained" sx={actionButtonSx}>
               Join
             </Button>
           )}

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { Autocomplete, MenuItem, Stack, TextField } from '@mui/material'
 import { COUNTRIES, DEFAULT_COUNTRY, REGIONS, isCountry, type Place } from '../../data/places'
-import { GROUP_LIMITS, type GroupFormErrors } from '../../lib/groupForm'
+import { GROUP_LIMITS, fieldErrorProps, type GroupFormErrors } from '../../lib/groupForm'
 import type { Group, KnownCity } from '../../types/group'
 
 /**
@@ -62,8 +62,7 @@ export default function GroupLocationFields({
             {...params}
             label="Country"
             required
-            error={Boolean(errors.country)}
-            helperText={errors.country}
+            {...fieldErrorProps(errors, 'country')}
           />
         )}
       />
@@ -79,8 +78,7 @@ export default function GroupLocationFields({
             fullWidth
             value={state}
             onChange={(event) => setState(event.target.value)}
-            error={Boolean(errors.state)}
-            helperText={errors.state}
+            {...fieldErrorProps(errors, 'state')}
           >
             {region.options.map((option) => (
               <MenuItem key={option.code} value={option.code}>
@@ -96,8 +94,7 @@ export default function GroupLocationFields({
             value={state}
             onChange={(event) => setState(event.target.value)}
             slotProps={{ htmlInput: { maxLength: GROUP_LIMITS.place } }}
-            error={Boolean(errors.state)}
-            helperText={errors.state ?? 'Optional'}
+            {...fieldErrorProps(errors, 'state', 'Optional')}
           />
         )}
         <Autocomplete
@@ -115,8 +112,7 @@ export default function GroupLocationFields({
                 ...params.slotProps,
                 htmlInput: { ...params.slotProps.htmlInput, maxLength: GROUP_LIMITS.place },
               }}
-              error={Boolean(errors.city)}
-              helperText={errors.city}
+              {...fieldErrorProps(errors, 'city')}
             />
           )}
         />

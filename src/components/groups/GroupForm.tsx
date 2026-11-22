@@ -19,10 +19,11 @@ import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
 import { colors } from '../../theme'
 import { MAX_GROUP_LINKS } from '../../data/groups'
-import { SPORTS } from '../../data/sports'
-import { GROUP_LIMITS, type GroupFormErrors, type GroupFormResult } from '../../lib/groupForm'
+import { SPORTS, isSport } from '../../data/sports'
+import { GROUP_LIMITS, fieldErrorProps, type GroupFormErrors, type GroupFormResult } from '../../lib/groupForm'
 import type { Group, KnownCity } from '../../types/group'
 import GroupLocationFields from './GroupLocationFields'
+import { sectionLabelSx } from './styles'
 
 /** One editable Group link row. `id` only keeps React's keys stable while rows are added and removed. */
 interface LinkRow {
@@ -37,13 +38,15 @@ function initialLinkRows(group?: Group): LinkRow[] {
   return rows.length > 0 ? rows : [{ id: 0, label: '', url: '' }]
 }
 
-const sectionLabelStyle = {
-  color: colors.navy,
-  fontWeight: 700,
-  letterSpacing: '0.18em',
-  textTransform: 'uppercase',
-  fontSize: '0.75rem',
-} as const
+const sportHint = (
+  <>
+    Don&rsquo;t see your sport? Pick Other and{' '}
+    <MuiLink href="/contact" target="_blank" rel="noopener" sx={{ color: colors.navy, fontWeight: 600 }}>
+      tell us
+    </MuiLink>
+    .
+  </>
+)
 
 /**
  * The Add / Edit Group form. `group` fills it in for editing. `action` saves it on the server: it
@@ -94,11 +97,6 @@ export default function GroupForm({
     })
   }
 
-  const fieldError = (field: keyof GroupFormErrors) => ({
-    error: Boolean(errors[field]),
-    helperText: errors[field],
-  })
-
   return (
     <Box component="section" sx={{ bgcolor: colors.bone, py: { xs: 14, md: 18 } }}>
       <Container maxWidth="md">
@@ -121,7 +119,7 @@ export default function GroupForm({
         >
           <Stack spacing={4}>
             <Stack spacing={2.5}>
-              <Typography sx={sectionLabelStyle}>About</Typography>
+              <Typography sx={sectionLabelSx}>About</Typography>
               <TextField
                 name="name"
                 label="Group name"
@@ -129,7 +127,7 @@ export default function GroupForm({
                 fullWidth
                 defaultValue={group?.name}
                 slotProps={{ htmlInput: { maxLength: GROUP_LIMITS.name } }}
-                {...fieldError('name')}
+                {...fieldErrorProps(errors, 'name')}
               />
               <TextField
                 select
@@ -137,19 +135,9 @@ export default function GroupForm({
                 label="Sport"
                 required
                 fullWidth
-                defaultValue={group?.sport ?? ''}
-                error={Boolean(errors.sport)}
-                helperText={
-                  errors.sport ?? (
-                    <>
-                      Don&rsquo;t see your sport? Pick Other and{' '}
-                      <MuiLink href="/contact" target="_blank" rel="noopener" sx={{ color: colors.navy, fontWeight: 600 }}>
-                        tell us
-                      </MuiLink>
-                      .
-                    </>
-                  )
-                }
+                // A sport from before the Sport list starts blank so the Owner picks one.
+                defaultValue={group && isSport(group.sport) ? group.sport : ''}
+                {...fieldErrorProps(errors, 'sport', sportHint)}
               >
                 {SPORTS.map((sport) => (
                   <MenuItem key={sport} value={sport}>
@@ -166,26 +154,29 @@ export default function GroupForm({
                 minRows={4}
                 defaultValue={group?.description}
                 slotProps={{ htmlInput: { maxLength: GROUP_LIMITS.description } }}
-                {...fieldError('description')}
+                {...fieldErrorProps(errors, 'description')}
               />
               <TextField
                 name="tags"
                 label="Tags"
                 fullWidth
                 defaultValue={group?.tags.join(', ')}
-                error={Boolean(errors.tags)}
-                helperText={errors.tags ?? 'Separate with commas, e.g. masters, road racing, track. People can search by them.'}
+                {...fieldErrorProps(
+                  errors,
+                  'tags',
+                  'Separate with commas, e.g. masters, road racing, track. People can search by them.',
+                )}
               />
             </Stack>
 
             <Stack spacing={2.5}>
-              <Typography sx={sectionLabelStyle}>Where</Typography>
+              <Typography sx={sectionLabelSx}>Where</Typography>
               <GroupLocationFields group={group} knownCities={knownCities} errors={errors} />
             </Stack>
 
             <Stack spacing={2}>
               <Box>
-                <Typography sx={sectionLabelStyle}>Links</Typography>
+                <Typography sx={sectionLabelSx}>Links</Typography>
                 <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem', mt: 0.5 }}>
                   Optional. Up to {MAX_GROUP_LINKS}: your website, Instagram, Strava, and so on.
                 </Typography>
@@ -244,7 +235,7 @@ export default function GroupForm({
                 type="submit"
                 variant="contained"
                 disabled={isSaving}
-                sx={{ bgcolor: colors.navy, minHeight: 48, '&:hover': { bgcolor: colors.navyDark } }}
+                sx={{ minHeight: 48 }}
               >
                 {isSaving ? 'Saving…' : submitLabel}
               </Button>

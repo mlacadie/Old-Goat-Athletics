@@ -11,6 +11,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube'
 import TikTokIcon from '../icons/TikTokIcon'
 import { colors } from '../../theme'
 import type { GroupLink } from '../../types/group'
+import { sectionLabelSx } from './styles'
 
 /** Sites that get their own icon. Anything else (a Group's website, Strava, ...) gets a globe. */
 const SITE_ICONS: Record<string, ComponentType<SvgIconProps>> = {
@@ -87,16 +88,7 @@ function LinkRow({ link }: { link: GroupLink }) {
 export default function GroupLinks({ links }: { links: GroupLink[] }) {
   return (
     <Box component="nav" aria-label="Group links" sx={{ flex: { md: '1 1 300px' }, minWidth: 0 }}>
-      <Typography
-        sx={{
-          color: colors.navy,
-          fontWeight: 700,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          fontSize: '0.75rem',
-          mb: 1.25,
-        }}
-      >
+      <Typography sx={{ ...sectionLabelSx, mb: 1.25 }}>
         Links
       </Typography>
       <Stack component="ul" spacing={1} sx={{ listStyle: 'none', m: 0, p: 0 }}>

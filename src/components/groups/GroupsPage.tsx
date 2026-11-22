@@ -20,13 +20,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import { colors } from '../../theme'
-import type { Group } from '../../types/group'
+import { ADD_GROUP_PATH } from '../../data/groups'
+import type { GroupListing } from '../../types/group'
 import GroupCard from './GroupCard'
 import SportPills from './SportPills'
 
 const ALL = 'All'
 
-const ADD_GROUP_PATH = '/groups/new'
 /** Visitors go straight to sign in, then on to the form. */
 const SIGN_IN_TO_ADD_GROUP = `/sign-in?redirect_url=${encodeURIComponent(ADD_GROUP_PATH)}`
 
@@ -35,7 +35,7 @@ function filterOptions(values: (string | undefined)[]): string[] {
   return [ALL, ...new Set(values.filter((value): value is string => Boolean(value)))]
 }
 
-function matchesSearch(group: Group, query: string) {
+function matchesSearch(group: GroupListing, query: string) {
   if (!query) return true
   const haystack = [group.name, group.sport, group.city, group.state, ...group.tags]
     .filter(Boolean)
@@ -44,13 +44,13 @@ function matchesSearch(group: Group, query: string) {
   return haystack.includes(query)
 }
 
-/** The Groups page. `userId` is the signed-in User (null for a Visitor), so their own Groups get marked. */
-export default function GroupsPage({ groups, userId }: { groups: Group[]; userId: string | null }) {
+/** The Groups page. Each Group says whether the viewer owns it; `signedIn` decides where Add your Group goes. */
+export default function GroupsPage({ groups, signedIn }: { groups: GroupListing[]; signedIn: boolean }) {
   const [sport, setSport] = useState(ALL)
   const [state, setState] = useState(ALL)
   const [search, setSearch] = useState('')
 
-  const addGroupHref = userId ? ADD_GROUP_PATH : SIGN_IN_TO_ADD_GROUP
+  const addGroupHref = signedIn ? ADD_GROUP_PATH : SIGN_IN_TO_ADD_GROUP
 
   const sports = useMemo(() => filterOptions(groups.map((group) => group.sport)), [groups])
   const states = useMemo(() => filterOptions(groups.map((group) => group.state)), [groups])
@@ -111,7 +111,7 @@ export default function GroupsPage({ groups, userId }: { groups: Group[]; userId
             href={addGroupHref}
             variant="contained"
             startIcon={<AddIcon />}
-            sx={{ flexShrink: 0, bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
+            sx={{ flexShrink: 0 }}
           >
             Add your Group
           </Button>
@@ -195,7 +195,6 @@ export default function GroupsPage({ groups, userId }: { groups: Group[]; userId
               href={addGroupHref}
               variant="contained"
               startIcon={<AddIcon />}
-              sx={{ bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
             >
               Add your Group
             </Button>
@@ -204,7 +203,7 @@ export default function GroupsPage({ groups, userId }: { groups: Group[]; userId
           <Grid container spacing={3}>
             {filtered.map((group) => (
               <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <GroupCard group={group} isOwner={userId === group.ownerId} />
+                <GroupCard group={group} />
               </Grid>
             ))}
           </Grid>

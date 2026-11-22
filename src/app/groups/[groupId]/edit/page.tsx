@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import GroupForm from '../../../../components/groups/GroupForm'
+import { groupPath } from '../../../../data/groups'
 import { getGroup, listKnownCities } from '../../../../lib/groups'
 import { getCurrentUserId, getGroupRole } from '../../../../lib/viewer'
 import { editGroup } from '../../actions'
@@ -19,7 +20,7 @@ export default async function Page({ params }: Props) {
       heading="Edit your Group"
       intro="Changes show on the Groups page and your Group page as soon as you save."
       submitLabel="Save changes"
-      cancelHref={`/groups/${group.id}`}
+      cancelHref={groupPath(group.id)}
       group={group}
       knownCities={await listKnownCities()}
       action={editGroup.bind(null, group.id)}

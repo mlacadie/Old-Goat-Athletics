@@ -1,13 +1,11 @@
 import Link from 'next/link'
-import { Box, Button, Chip, Container, Stack, Typography } from '@mui/material'
+import { Box, Container, Stack, Typography } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import CheckIcon from '@mui/icons-material/Check'
-import StarIcon from '@mui/icons-material/Star'
 import { colors } from '../../theme'
 import type { Group } from '../../types/group'
 import type { GroupRole } from '../../lib/viewer'
 import { DEFAULT_GROUP_IMAGE } from '../../data/groups'
-import EditGroupButton from './EditGroupButton'
+import GroupActions from './GroupActions'
 
 const backLinkStyle = {
   display: 'inline-flex',
@@ -20,49 +18,6 @@ const backLinkStyle = {
   textDecoration: 'none',
 }
 
-const roleChipStyle = {
-  bgcolor: 'rgba(255,255,255,0.14)',
-  color: '#fff',
-  fontWeight: 700,
-  height: 48,
-  px: 1,
-  '& .MuiChip-icon': { color: colors.goldLight },
-}
-
-function GroupActions({ groupId, role }: { groupId: string; role: GroupRole }) {
-  if (role === 'owner') {
-    return (
-      <Stack direction="row" spacing={1.5} sx={{ flexShrink: 0, alignItems: 'center' }}>
-        <Chip icon={<StarIcon />} label="Your Group" sx={roleChipStyle} />
-        <EditGroupButton groupId={groupId} />
-      </Stack>
-    )
-  }
-  if (role === 'member') {
-    return (
-      <Chip
-        icon={<CheckIcon />}
-        label="Member"
-        sx={{ ...roleChipStyle, '& .MuiChip-icon': { color: '#fff' } }}
-      />
-    )
-  }
-  // Joining: wire this up. Visitors are asked to sign in first.
-  return (
-    <Button
-      variant="contained"
-      sx={{
-        flexShrink: 0,
-        minHeight: 48,
-        bgcolor: '#fff',
-        color: colors.navy,
-        '&:hover': { bgcolor: colors.bone },
-      }}
-    >
-      Join Group
-    </Button>
-  )
-}
 
 /** The top of a Group page: Group banner (or the branded fallback), sport and location, name, and Join. */
 export default function GroupHero({ group, role }: { group: Group; role: GroupRole }) {
