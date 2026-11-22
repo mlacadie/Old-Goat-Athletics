@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
-import { colors } from '../../theme'
 import JoinButton from './JoinButton'
+import { panelSx, sectionLabelSx } from './styles'
 
 /**
  * Shown to Visitors and Users who haven't joined, in place of the Next up card: what Members get,
@@ -12,9 +12,7 @@ export default function JoinPrompt({ groupId, status }: { groupId: string; statu
       component="section"
       aria-labelledby="join-prompt-heading"
       sx={{
-        bgcolor: '#fff',
-        border: `1px solid ${colors.grayLight}`,
-        borderRadius: '18px',
+        ...panelSx,
         px: { xs: 3, md: 3.5 },
         py: { xs: 4, md: 5 },
         display: 'flex',
@@ -23,17 +21,7 @@ export default function JoinPrompt({ groupId, status }: { groupId: string; statu
         gap: 1.75,
       }}
     >
-      <Typography
-        sx={{
-          color: colors.navy,
-          fontWeight: 700,
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
-          fontSize: '0.75rem',
-        }}
-      >
-        Members only
-      </Typography>
+      <Typography sx={sectionLabelSx}>Members only</Typography>
       <Typography id="join-prompt-heading" variant="h2" sx={{ fontSize: { xs: '2rem', md: '2.4rem' }, lineHeight: 1 }}>
         See what&rsquo;s next, and who&rsquo;s going
       </Typography>

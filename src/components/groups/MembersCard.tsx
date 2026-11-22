@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { visuallyHidden } from '@mui/utils'
 import { colors } from '../../theme'
 import type { GroupMember } from '../../types/group'
 import LockedNote from './LockedNote'
@@ -91,7 +92,7 @@ export default function MembersCard({ groupName, members }: { groupName: string;
           {members.slice(0, PREVIEW_COUNT).map((member, index) => (
             <li key={member.key} title={member.name}>
               <MemberAvatar member={member} index={index} />
-              <Typography component="span" sx={visuallyHiddenSx}>
+              <Typography component="span" sx={visuallyHidden}>
                 {member.name}
               </Typography>
             </li>
@@ -128,13 +129,3 @@ export default function MembersCard({ groupName, members }: { groupName: string;
     </Stack>
   )
 }
-
-/** Read by screen readers, not shown: the name behind each avatar's initials. */
-const visuallyHiddenSx = {
-  position: 'absolute',
-  width: 1,
-  height: 1,
-  overflow: 'hidden',
-  clip: 'rect(0 0 0 0)',
-  whiteSpace: 'nowrap',
-} as const

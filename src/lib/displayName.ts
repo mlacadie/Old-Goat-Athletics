@@ -11,5 +11,5 @@ export function getDisplayName(firstName: string | null, lastName: string | null
 export function getInitials(displayName: string): string {
   const words = displayName.trim().split(/\s+/).filter(Boolean)
   const letters = words.length > 1 ? [words[0], words[words.length - 1]] : words
-  return letters.map((word) => word[0].toUpperCase()).join('')
+  return letters.map((word) => (Array.from(word)[0] ?? '').toUpperCase()).join('')
 }

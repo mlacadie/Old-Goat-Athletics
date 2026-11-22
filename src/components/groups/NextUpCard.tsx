@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material'
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined'
 import { colors } from '../../theme'
+import { sectionLabelSx } from './styles'
 
 /**
  * The navy card at the top of the members-only area that will show the Group's next Event (date,
@@ -41,14 +42,7 @@ export default function NextUpCard() {
         <Typography
           id="next-up-heading"
           component="h2"
-          sx={{
-            m: 0,
-            color: colors.goldLight,
-            fontWeight: 700,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            fontSize: '0.75rem',
-          }}
+          sx={{ ...sectionLabelSx, m: 0, color: colors.goldLight }}
         >
           Next up
         </Typography>

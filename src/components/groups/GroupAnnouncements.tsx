@@ -1,14 +1,9 @@
 import { Box, Skeleton, Stack, Typography } from '@mui/material'
-import { colors } from '../../theme'
 import LockedNote from './LockedNote'
+import { panelSx } from './styles'
 
-const cardSx = {
-  bgcolor: '#fff',
-  border: `1px solid ${colors.grayLight}`,
-  borderRadius: '14px',
-  px: 2.5,
-  py: 2.25,
-} as const
+/** A smaller `panelSx` card, for one Announcement or the empty state. */
+const cardSx = { ...panelSx, borderRadius: '14px', py: 2.25 } as const
 
 /** Placeholder bars for one Announcement. Always the same, so they say nothing about the real ones. */
 function AnnouncementSkeleton({ titleWidth }: { titleWidth: string }) {

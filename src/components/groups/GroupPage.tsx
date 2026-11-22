@@ -4,6 +4,7 @@ import type { Group, MembersOnlyContent } from '../../types/group'
 import type { DateKey } from '../../lib/calendar'
 import type { GroupRole } from '../../lib/viewer'
 import GroupHero from './GroupHero'
+import { GroupMembershipProvider } from './GroupMembership'
 import GroupLinks from './GroupLinks'
 import MembersOnlySection from './MembersOnlySection'
 
@@ -20,7 +21,7 @@ export default function GroupPage({ group, role, membersOnly, today }: Props) {
   const links = group.links ?? []
 
   return (
-    <>
+    <GroupMembershipProvider groupId={group.id} initiallyMember={role === 'member'}>
       <GroupHero group={group} role={role} />
       <Box component="section" aria-label={`About ${group.name}`} sx={{ bgcolor: colors.bone }}>
         <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
@@ -58,6 +59,6 @@ export default function GroupPage({ group, role, membersOnly, today }: Props) {
           />
         </Container>
       </Box>
-    </>
+    </GroupMembershipProvider>
   )
 }

@@ -37,7 +37,8 @@ export default function MembersOnlySection({ groupId, groupName, role, content, 
       </Stack>
       <Box sx={{ flex: { md: '1 1 340px' }, minWidth: 0 }}>
         <Stack spacing={3}>
-          <GroupCalendar serverToday={today} locked={locked} />
+          {/* Keyed on `locked` so joining (or rejoining) always starts on this month. */}
+          <GroupCalendar key={locked ? 'locked' : 'open'} serverToday={today} locked={locked} />
           <MembersCard groupName={groupName} members={content?.members ?? null} />
         </Stack>
       </Box>

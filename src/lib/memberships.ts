@@ -1,5 +1,5 @@
 import 'server-only'
-import { and, asc, eq, or, sql } from 'drizzle-orm'
+import { and, asc, eq, ne, or, sql } from 'drizzle-orm'
 import { getDb } from '../db'
 import { groups, memberships, users } from '../db/schema'
 import type { Group, GroupMember, MyGroup } from '../types/group'
@@ -68,8 +68,8 @@ export async function listMyGroups(userId: string): Promise<MyGroup[]> {
 
 /**
  * A Group's Members list, for its Members only (see `getMembersOnlyContent`): the Owner first,
- * then everyone who joined, earliest first. Display names only. The Owner is left out when they
- * have no account row (the placeholder Groups' "site-admin").
+ * then everyone else who joined, earliest first. Display names only. The Owner is left out when they
+ * have no account row (the placeholder Groups' "site-admin"; real Owners get one in `addGroup`).
  */
 export async function listGroupMembers(
   group: Pick<Group, 'id' | 'ownerId'>,
@@ -82,7 +82,7 @@ export async function listGroupMembers(
       .select({ id: users.id, name: users.displayName })
       .from(memberships)
       .innerJoin(users, eq(users.id, memberships.userId))
-      .where(eq(memberships.groupId, group.id))
+      .where(and(eq(memberships.groupId, group.id), ne(memberships.userId, group.ownerId)))
       .orderBy(asc(memberships.joinedAt), asc(users.displayName)),
   ])
   return [...owner, ...joined].map((row, index) => ({

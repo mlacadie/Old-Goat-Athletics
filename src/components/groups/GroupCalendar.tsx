@@ -42,7 +42,7 @@ export default function GroupCalendar({ serverToday, locked }: { serverToday: Da
   const today = useSyncExternalStore(subscribeToNothing, todayKey, () => serverToday)
   const [monthOffset, setMonthOffset] = useState(0)
   const headingId = useId()
-  const start = monthStart(today, locked ? 0 : monthOffset)
+  const start = monthStart(today, monthOffset)
   const weeks = monthWeeks(start)
 
   return (
