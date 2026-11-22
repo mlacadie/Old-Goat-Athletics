@@ -8,6 +8,13 @@ Before starting, read [docs/GLOSSARY.md](docs/GLOSSARY.md) for shared terms, [do
 
 Prefer an issue before code changes, so the intended work has a place for discussion and can be linked to its PR. A missing issue does not prevent a contribution.
 
+**Issue titles** use `Area: outcome`. The area is the part of the site (`Groups`, `Membership`, `Announcements`, `Events`, `Notifications`, `Design`, `Store`, `Accounts`). The outcome is a plain imperative sentence saying what will change:
+
+- ✅ `Groups: Require Site Admin approval before a Group is listed`
+- ❌ `Group Approval` (names the feature but not what it does)
+
+**Priority:** give every open issue one priority label: `High`, `Medium`, or `Low`. **Release:** add the `jan release` label if it's planned for the January 2027 release (the matching milestone is **January 2027 Release**).
+
 Planned work is tracked on the [project board](https://github.com/users/mlacadie/projects/2):
 
 - Move the issue to **In Progress** when you start.
