@@ -20,7 +20,7 @@ Each feature has a short name. Use that name when we talk about building it. Eac
 | #19 | **Group Approval** | A Site Admin approves new Groups before they're listed. **Needed before launch.** | Add a Group | Planned |
 | #20 | **Group Images** | Owners upload a Group image and Group banner | Add a Group | Planned |
 | #4 | **Joining** | Users join/leave Groups and become Members | Accounts, Group Pages | Done |
-| #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Planned |
+| #5 | **Members-only Content** | Gate Announcements, Events, and the Members list behind membership | Joining | Done |
 | #6 | **Announcements** | Group Owners post updates to their Group | Members-only Content | Planned |
 | #7 | **Events & Calendar** | Group Owners post Events; Group page shows upcoming ones | Members-only Content | Planned |
 | #8 | **Notifications** | Members get email/text for new Announcements and Events | Announcements or Events | Planned |
@@ -139,6 +139,7 @@ When a feature ships, change its status here, close its issue, and remove the **
 - Visitors and non-member Users see the public info plus a prompt to sign in or join where that content would be.
 - Enforced on the server: members-only data is never sent to non-members. Hiding it in the UI is not enough.
 - The **Members list** shows each Member's display name (not contact info).
+- **Decided:** built from design **G**. Members see Next up, Latest Announcements, the Calendar, and the Members list (avatars plus **See all**, a dialog of display names). Non-members see the join prompt in place of Next up and locked, grayed-out placeholders of the other cards, with no counts. Members can't hide themselves from the list. Next up, Announcements, and the Calendar's Events show empty states until **Announcements** and **Events & Calendar** fill them through the same server-side gate.
 
 **Done when:** a non-member cannot get members-only content by any means, and a Member sees all of it.
 
@@ -266,8 +267,8 @@ Decide these before or while building the feature in brackets.
 5. **[Accounts]** What happens to a Group if its Owner leaves or deletes their account? Can ownership transfer?
 6. ~~**[Accounts]** Is the phone number required, optional, or only asked for if the User wants texts?~~ Not collected for the January release. Revisit with **Notifications** when texts are added.
 7. **[Notifications]** Can Members choose a channel per Group, mute a Group, or get a digest instead of every post?
-8. **[Members-only Content]** Can a Member hide themselves from the Members list?
-9. **[Members-only Content]** Should non-members see a teaser, e.g. "3 upcoming Events, join to see"?
+8. ~~**[Members-only Content]** Can a Member hide themselves from the Members list?~~ No, not for now. Add a setting later if Members ask for one.
+9. ~~**[Members-only Content]** Should non-members see a teaser, e.g. "3 upcoming Events, join to see"?~~ No counts. They see the join prompt and locked, grayed-out placeholders of the cards instead.
 10. **[Events & Calendar]** Do Events need recurring schedules, RSVPs, or reminder Notifications before they start?
 11. ~~**[Next.js Migration]** Is there a custom domain to move?~~ No domain yet; the site uses its Vercel URL for now.
 12. **[Shopify Store]** Does the Shopify store already exist? Link out or show products on the site? Do Members get perks?

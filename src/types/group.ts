@@ -56,3 +56,28 @@ export interface MyGroup {
   /** The User owns this Group; otherwise they joined it. */
   isOwner: boolean
 }
+
+/**
+ * One person in a Group's Members list, as the Group page sends it to Members. Only the display
+ * name: never contact info, and not the User's id, which stays on the server.
+ */
+export interface GroupMember {
+  /** Tells the entries apart in one Members list. */
+  key: string
+  /** Display name (see `getDisplayName`). */
+  name: string
+  initials: string
+  isOwner: boolean
+  /** This entry is the person viewing the page. */
+  isViewer: boolean
+}
+
+/**
+ * Everything on a Group page that only Members see. Loaded on the server by
+ * `getMembersOnlyContent()`, which returns null for anyone else, so none of it reaches non-members.
+ * Announcements and Events join it when those features are built.
+ */
+export interface MembersOnlyContent {
+  /** The Owner first (when they have an account row), then Members in the order they joined. */
+  members: GroupMember[]
+}

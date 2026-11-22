@@ -1,8 +1,9 @@
 import 'server-only'
-import { and, asc, eq, or, sql } from 'drizzle-orm'
+import { and, asc, eq, ne, or, sql } from 'drizzle-orm'
 import { getDb } from '../db'
-import { groups, memberships } from '../db/schema'
-import type { MyGroup } from '../types/group'
+import { groups, memberships, users } from '../db/schema'
+import type { Group, GroupMember, MyGroup } from '../types/group'
+import { getInitials } from './displayName'
 
 /**
  * Makes `userId` a Member of the Group. Does nothing if they already are, own the Group, or there
@@ -62,5 +63,33 @@ export async function listMyGroups(userId: string): Promise<MyGroup[]> {
     ...group,
     location: [city, state].filter(Boolean).join(', '),
     isOwner: ownerId === userId,
+  }))
+}
+
+/**
+ * A Group's Members list, for its Members only (see `getMembersOnlyContent`): the Owner first,
+ * then everyone else who joined, earliest first. Display names only. The Owner is left out when they
+ * have no account row (the placeholder Groups' "site-admin"; real Owners get one in `addGroup`).
+ */
+export async function listGroupMembers(
+  group: Pick<Group, 'id' | 'ownerId'>,
+  viewerId: string,
+): Promise<GroupMember[]> {
+  const db = getDb()
+  const [owner, joined] = await Promise.all([
+    db.select({ id: users.id, name: users.displayName }).from(users).where(eq(users.id, group.ownerId)),
+    db
+      .select({ id: users.id, name: users.displayName })
+      .from(memberships)
+      .innerJoin(users, eq(users.id, memberships.userId))
+      .where(and(eq(memberships.groupId, group.id), ne(memberships.userId, group.ownerId)))
+      .orderBy(asc(memberships.joinedAt), asc(users.displayName)),
+  ])
+  return [...owner, ...joined].map((row, index) => ({
+    key: `member-${index}`,
+    name: row.name,
+    initials: getInitials(row.name),
+    isOwner: row.id === group.ownerId,
+    isViewer: row.id === viewerId,
   }))
 }

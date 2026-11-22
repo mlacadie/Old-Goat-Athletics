@@ -24,14 +24,16 @@ This describes the site we are building toward, not only what exists today. Term
 | **Groups page** | The directory at `/groups` that lists every Group as a card, with search, sport pills, and a state filter. |
 | **Sport pills** | The row of sport filter buttons on the Groups page. One pill per sport that has a Group. When the pills don't fit, the row scrolls sideways, shows left/right arrow buttons, and fades the pills out toward the arrows. |
 | **Group card** | One Group's tile on the Groups page: Group image, sport, name, location, description, and two buttons, **View Group** (opens the Group page) and **Join**. On Groups the viewer joined, the card shows a **Member** badge and **Leave** instead of Join. On the Group Owner's own Groups, it shows a **Your Group** badge and **Edit Group** instead. The Group's links live on the Group page, not the card. |
-| **Group page** | A page dedicated to a single Group (e.g. `/groups/old-goat-track-club`), opened from its Group card. Shows the Group banner across the top, then the Group's public info and Group links. |
+| **Group page** | A page dedicated to a single Group (e.g. `/groups/old-goat-track-club`), opened from its Group card. Shows the Group banner across the top, then the Group's public info and Group links, then the members-only area. |
 | **Group links** | Up to 3 links on a Group page, each with a label and a URL: the Group's website or socials (Instagram, Strava, ...). Shown with an icon for the site they point to. The Group Owner adds them when adding or editing a Group. |
 | **Group image** | An optional picture of the Group, shown on the Group card (the `image` field). **(planned, Group Images)** The Group Owner uploads it when adding or editing a Group, and it also shows on the Group page. Without one, the default Group image is used. |
 | **Group banner** | An optional wide image shown across the top of the Group page (the `banner` field). Without one, the Group page uses a plain branded banner with the default Group image. **(planned, Group Images)** The Group Owner uploads it. |
 | **Default Group image** | The fallback when a Group has no Group image (and, once planned features ship, no Group banner): the Old Goat logo at [public/logos/OGTC_OGoatG_KC.svg](../public/logos/OGTC_OGoatG_KC.svg). |
 | **Sport list** | The set list of sports a Group Owner picks from when adding or editing a Group, with **Other** always last. Lives in `src/data/sports.ts`. |
 | **Public info** | The parts of a Group anyone can see: name, sport, location, description, tags, Group links, Group image, and Group banner. |
-| **Members-only content** **(planned)** | The parts of a Group page only Members can see: Announcements, Events/Calendar, and the Members list. |
+| **Members-only content** | The parts of a Group page only Members (and the Group Owner) can see: Next up, Latest Announcements, the Calendar's Events, and the Members list. Loaded on the server only for Members, never sent to anyone else. Visitors and non-member Users see the **join prompt** in its place, plus locked, grayed-out versions of the other cards. |
+| **Join prompt** | The "See what's next, and who's going" card non-members see where Next up would be, with **Join Group** (or **Sign in to join** for Visitors). |
+| **Members list** | The **Members** card on a Group page: avatars with initials for the Owner and every Member, and **See all**, which opens a dialog of display names (the Owner and "You" marked). Display names only, never contact info. Members can't hide themselves from it. |
 | **Join** | The action a User takes to become a Member of a Group, from its Group card or Group page. Instant, with no approval. Visitors are asked to sign in first. Joining also subscribes them to that Group's Notifications. We use "join" rather than "subscribe" in the UI and code. |
 | **Leave** | The opposite of Join, offered to Members in its place. Takes effect right away and stops membership and Notifications. The Owner can't leave their own Group. |
 
@@ -41,8 +43,8 @@ This describes the site we are building toward, not only what exists today. Term
 | --- | --- |
 | **Announcement** | A post from a Group (news, updates, reminders). Sent to Members as a Notification. |
 | **Event** | Something with a date/time and usually a location (a workout, race, social). Sent to Members as a Notification. |
-| **Calendar** | The view on a Group page showing that Group's upcoming Events. |
-| **Members list** | The list of a Group's Members shown on its Group page. |
+| **Calendar** | The month view on a Group page, today outlined. Members step through months; non-members see this month locked. **(planned, Events & Calendar)** It marks days with Events and lists the upcoming ones. |
+| **Next up** | The navy card at the top of the members-only area. **(planned, Events & Calendar)** Shows the next Event; until then it says there are none yet. |
 
 ## Accounts
 

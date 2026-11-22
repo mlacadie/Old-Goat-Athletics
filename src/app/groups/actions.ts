@@ -39,6 +39,8 @@ export async function addGroup(formData: FormData): Promise<GroupFormResult> {
   const parsed = parseGroupForm(formData)
   if (!parsed.ok) return { errors: parsed.errors }
 
+  // The Owner needs a row so they appear in their Group's Members list.
+  await ensureUser(userId)
   const groupId = await createGroup(parsed.group, userId)
   redirect(groupPath(groupId))
 }
