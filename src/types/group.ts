@@ -13,8 +13,9 @@ export interface Group {
   /** Drives the sport filter on the Groups page. */
   sport: string
   city?: string
-  /** Drives the state filter on the Groups page. */
+  /** Drives the state filter on the Groups page. A postal abbreviation ("MA") in the US and Canada. */
   state?: string
+  /** ISO country code, e.g. "US" (see src/data/places.ts). */
   country?: string
   description: string
   tags: string[]
@@ -26,4 +27,11 @@ export interface Group {
   image?: string
   /** Wide image across the top of the Group page. Falls back to a branded banner when missing. */
   banner?: string
+}
+
+/** A city some Group already uses. The Add / Edit Group form suggests these so spellings stay consistent. */
+export interface KnownCity {
+  city: string
+  state: string | null
+  country: string | null
 }

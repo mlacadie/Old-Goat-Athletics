@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import {
   Box,
   Container,
@@ -25,6 +26,10 @@ import SportPills from './SportPills'
 
 const ALL = 'All'
 
+const ADD_GROUP_PATH = '/groups/new'
+/** Visitors go straight to sign in, then on to the form. */
+const SIGN_IN_TO_ADD_GROUP = `/sign-in?redirect_url=${encodeURIComponent(ADD_GROUP_PATH)}`
+
 /** "All" plus each distinct value, in the order the Groups first use it. */
 function filterOptions(values: (string | undefined)[]): string[] {
   return [ALL, ...new Set(values.filter((value): value is string => Boolean(value)))]
@@ -39,10 +44,13 @@ function matchesSearch(group: Group, query: string) {
   return haystack.includes(query)
 }
 
-export default function GroupsPage({ groups }: { groups: Group[] }) {
+/** The Groups page. `userId` is the signed-in User (null for a Visitor), so their own Groups get marked. */
+export default function GroupsPage({ groups, userId }: { groups: Group[]; userId: string | null }) {
   const [sport, setSport] = useState(ALL)
   const [state, setState] = useState(ALL)
   const [search, setSearch] = useState('')
+
+  const addGroupHref = userId ? ADD_GROUP_PATH : SIGN_IN_TO_ADD_GROUP
 
   const sports = useMemo(() => filterOptions(groups.map((group) => group.sport)), [groups])
   const states = useMemo(() => filterOptions(groups.map((group) => group.state)), [groups])
@@ -99,6 +107,8 @@ export default function GroupsPage({ groups }: { groups: Group[] }) {
             </Typography>
           </Stack>
           <Button
+            component={Link}
+            href={addGroupHref}
             variant="contained"
             startIcon={<AddIcon />}
             sx={{ flexShrink: 0, bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
@@ -181,6 +191,8 @@ export default function GroupsPage({ groups }: { groups: Group[] }) {
               Run one that should be here? Add it so other former athletes can find it and join.
             </Typography>
             <Button
+              component={Link}
+              href={addGroupHref}
               variant="contained"
               startIcon={<AddIcon />}
               sx={{ bgcolor: colors.navy, '&:hover': { bgcolor: colors.navyDark } }}
@@ -192,7 +204,7 @@ export default function GroupsPage({ groups }: { groups: Group[] }) {
           <Grid container spacing={3}>
             {filtered.map((group) => (
               <Grid key={group.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <GroupCard group={group} />
+                <GroupCard group={group} isOwner={userId === group.ownerId} />
               </Grid>
             ))}
           </Grid>
