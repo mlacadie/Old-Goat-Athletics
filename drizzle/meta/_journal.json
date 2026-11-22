@@ -15,6 +15,20 @@
       "when": 1795273483031,
       "tag": "0001_make_email_nullable",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795366965509,
+      "tag": "0002_create_groups",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795366966197,
+      "tag": "0003_seed_placeholder_groups",
+      "breakpoints": true
     }
   ]
 }

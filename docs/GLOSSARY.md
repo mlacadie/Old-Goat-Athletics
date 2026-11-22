@@ -20,7 +20,7 @@ This describes the site we are building toward, not only what exists today. Term
 
 | Term | Meaning |
 | --- | --- |
-| **Group** | A club, team, or crew listed on the site (e.g. "Old Goat Track Club"). This is the canonical term. In code, Groups are currently stored as `clubs` in [src/data/clubs.json](../src/data/clubs.json); "club" and "group" mean the same thing. |
+| **Group** | A club, team, or crew listed on the site (e.g. "Old Goat Track Club"). This is the canonical term. Stored in the `groups` database table. Older copy may say "club"; it means the same thing. |
 | **Groups page** | The directory at `/groups` that lists every Group as a card, with search, sport pills, and a state filter. |
 | **Sport pills** | The row of sport filter buttons on the Groups page. One pill per sport that has a Group. When the pills don't fit, the row scrolls sideways, shows left/right arrow buttons, and fades the pills out toward the arrows. |
 | **Group card** | One Group's tile on the Groups page: Group image, sport, name, location, description, and two buttons, **View Group** (opens the Group page) and **Join**. Join doesn't do anything until **Joining** ships. The Group's links live on the Group page, not the card. |

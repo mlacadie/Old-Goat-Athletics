@@ -11,7 +11,7 @@ How the site works **today**. For planned changes see [ROADMAP.md](ROADMAP.md); 
 - **Accounts:** Clerk (sign in, sign up, profile, sessions). Installed through the Vercel Marketplace.
 - **Database:** Neon Postgres (via the Vercel Marketplace), queried with **Drizzle ORM** over Neon's HTTP driver.
 
-Groups are still in the source code (see **Group data**). Pages that don't depend on who is viewing are prerendered as static HTML at build time; Group pages and account pages are rendered per request.
+Groups live in the database (see **Group data**). Pages that don't depend on the database or on who is viewing are prerendered as static HTML at build time; the Groups page, Group pages, and account pages are rendered per request.
 
 ## Routes
 
@@ -20,8 +20,8 @@ Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [
 | Path | Files | Notes |
 | --- | --- | --- |
 | `/` | [app/page.tsx](../src/app/page.tsx) | Stacked Home page Sections from [components/home/](../src/components/home/). |
-| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. The "Add your Group" and "Join" buttons are placeholders with no action yet. |
-| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group (ids from `generateStaticParams`), rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, Join) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
+| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Rendered per request from the database (`listGroups()`), so new Groups show up right away. Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. The "Add your Group" and "Join" buttons are placeholders with no action yet. |
+| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, loaded with `getGroup(id)` and rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, Join) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
 | `/sign-in`, `/sign-up` | [app/sign-in/[[...sign-in]]/page.tsx](../src/app/sign-in/[[...sign-in]]/page.tsx), [app/sign-up/[[...sign-up]]/page.tsx](../src/app/sign-up/[[...sign-up]]/page.tsx) | Clerk's `<SignIn>` / `<SignUp>` forms inside [AccountSection.tsx](../src/components/account/AccountSection.tsx). Catch-all folders because Clerk adds its own sub-steps (e.g. `/sign-in/factor-one`). |
 | `/profile` | [app/profile/page.tsx](../src/app/profile/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) with hash routing (tabs switch in the browser, e.g. `/profile#/security`) plus our own Notifications tab ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
 | `/api/webhooks/clerk` | [app/api/webhooks/clerk/route.ts](../src/app/api/webhooks/clerk/route.ts) | Clerk calls this on account create, update, and delete; keeps the `users` table in sync. |
@@ -54,9 +54,9 @@ src/
     groups/     Groups page and Group page components
     contact/    Contact page components
     icons/      Custom icons not in MUI
-  data/         Static content: clubs.json + groups.ts (Groups), navLinks.ts
+  data/         Static content and constants: groups.ts (Group constants), navLinks.ts
   db/           Database: schema.ts (Drizzle tables) and index.ts (the `db` client)
-  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; displayName.ts)
+  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; groups.ts: groups table; displayName.ts)
   types/        Shared TypeScript types (e.g. `Group`, `User`)
   theme.ts      Brand colors (`colors`) and MUI theme
   proxy.ts      Clerk on every request; protects User-only routes (Next.js 16's name for middleware)
@@ -69,28 +69,21 @@ Don't create `src/pages/`: Next.js would treat it as the old Pages Router.
 
 ## Group data
 
-Groups live in [src/data/clubs.json](../src/data/clubs.json) as an array. Import them through [src/data/groups.ts](../src/data/groups.ts) (`GROUPS`, `getGroup(id)`, `DEFAULT_GROUP_IMAGE`), which types them with the `Group` type from [src/types/group.ts](../src/types/group.ts) and drops any links past `MAX_GROUP_LINKS` (3). Adding or editing a Group currently means editing this file and redeploying.
+Groups live in the **`groups`** table (see **Database**). Server code reads them through [src/lib/groups.ts](../src/lib/groups.ts) (`listGroups()`, `getGroup(id)`), which turns each row into the `Group` type from [src/types/group.ts](../src/types/group.ts): empty columns become missing fields, and links past `MAX_GROUP_LINKS` (3) are dropped. Client components never query the database; pages pass Groups to them as props. [src/data/groups.ts](../src/data/groups.ts) holds the constants both sides use (`DEFAULT_GROUP_IMAGE`, `MAX_GROUP_LINKS`).
 
-```json
-{
-  "id": "old-goat-track-club",   // unique, URL-safe slug
-  "name": "Old Goat Track Club",
-  "sport": "Running",            // drives the sport filter
-  "city": "Waltham",
-  "state": "MA",                 // drives the state filter
-  "country": "USA",
-  "description": "...",
-  "tags": ["masters", "..."],    // searchable on the Groups page
-  "ownerId": "site-admin",       // required; the User who can edit the Group (see below)
-  "links": [                     // up to 3, shown on the Group page; icon picked from the URL's site
-    { "label": "Website", "url": "https://..." }
-  ],
-  "image": "/groups/....jpg",    // optional Group image; defaults to /logos/OGTC_OGoatG_KC.svg
-  "banner": "/groups/....jpg"    // optional Group banner; defaults to a branded navy banner
-}
-```
+| Column | Notes |
+| --- | --- |
+| `id` | Unique, URL-safe slug, e.g. `old-goat-track-club`. Also the Group page path. |
+| `name`, `description` | Required. |
+| `sport` | Required. Drives the sport pills. |
+| `city`, `state`, `country` | Optional. `state` drives the state filter. |
+| `tags` | Text array, searchable on the Groups page. |
+| `links` | JSON array of up to 3 `{ label, url }`, shown on the Group page. The icon is picked from the URL's site. |
+| `image`, `banner` | Optional. Without them the Group card uses `/logos/OGTC_OGoatG_KC.svg` and the Group page a branded navy banner. |
+| `owner_id` | Required: the Group Owner's Clerk user id. Not a foreign key to `users`, because placeholder Groups use `"site-admin"`. |
+| `created_at`, `updated_at` | The Groups page lists Groups oldest first. |
 
-Every Group has an Owner. Groups listed before Accounts existed are owned by the placeholder `"site-admin"` until someone claims them.
+Every Group has an Owner. The three placeholder Groups, seeded by a migration so the site has something to show while testing, are owned by `"site-admin"`.
 
 ## Accounts
 
@@ -102,7 +95,7 @@ Every Group has an Owner. Groups listed before Accounts existed are owned by the
 
 ## Database
 
-Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code calls `getDb()` from [src/db/index.ts](../src/db/index.ts), which connects on first use, so pages that never query the database (and `yarn build`) work without `DATABASE_URL`. Only server code may touch the database ([users.ts](../src/lib/users.ts) imports `server-only` to enforce this).
+Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code calls `getDb()` from [src/db/index.ts](../src/db/index.ts), which connects on first use, so pages that never query the database (and `yarn build`) work without `DATABASE_URL`. Only server code may touch the database ([users.ts](../src/lib/users.ts) and [groups.ts](../src/lib/groups.ts) import `server-only` to enforce this).
 
 **`users`** mirrors each Clerk account: `id` (the Clerk user id), `display_name`, `email` (primary email; null if the account has none), `email_notifications` (default on), `created_at`, `updated_at`. It is kept in sync two ways:
 

@@ -19,15 +19,16 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import { colors } from '../../theme'
-import { GROUPS } from '../../data/groups'
 import type { Group } from '../../types/group'
 import GroupCard from './GroupCard'
 import SportPills from './SportPills'
 
 const ALL = 'All'
 
-const SPORTS = [ALL, ...new Set(GROUPS.map((group) => group.sport).filter(Boolean))]
-const STATES = [ALL, ...new Set(GROUPS.map((group) => group.state).filter(Boolean))]
+/** "All" plus each distinct value, in the order the Groups first use it. */
+function filterOptions(values: (string | undefined)[]): string[] {
+  return [ALL, ...new Set(values.filter((value): value is string => Boolean(value)))]
+}
 
 function matchesSearch(group: Group, query: string) {
   if (!query) return true
@@ -38,22 +39,25 @@ function matchesSearch(group: Group, query: string) {
   return haystack.includes(query)
 }
 
-export default function GroupsPage() {
+export default function GroupsPage({ groups }: { groups: Group[] }) {
   const [sport, setSport] = useState(ALL)
   const [state, setState] = useState(ALL)
   const [search, setSearch] = useState('')
+
+  const sports = useMemo(() => filterOptions(groups.map((group) => group.sport)), [groups])
+  const states = useMemo(() => filterOptions(groups.map((group) => group.state)), [groups])
 
   const query = search.trim().toLowerCase()
 
   const filtered = useMemo(
     () =>
-      GROUPS.filter(
+      groups.filter(
         (group) =>
           (sport === ALL || group.sport === sport) &&
           (state === ALL || group.state === state) &&
           matchesSearch(group, query)
       ),
-    [sport, state, query]
+    [groups, sport, state, query]
   )
 
   const hasActiveFilters = sport !== ALL || state !== ALL || query !== ''
@@ -138,7 +142,7 @@ export default function GroupsPage() {
               onChange={(event) => setState(event.target.value)}
               sx={{ bgcolor: '#fff', minHeight: 46 }}
             >
-              {STATES.map((option) => (
+              {states.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
@@ -147,11 +151,11 @@ export default function GroupsPage() {
           </FormControl>
         </Stack>
 
-        <SportPills sports={SPORTS} value={sport} onChange={setSport} />
+        <SportPills sports={sports} value={sport} onChange={setSport} />
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 3.5, minHeight: 44 }}>
           <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
-            Showing {filtered.length} of {GROUPS.length} Groups
+            Showing {filtered.length} of {groups.length} Groups
           </Typography>
           {hasActiveFilters && (
             <Button onClick={clearFilters} sx={{ color: colors.navy, fontWeight: 700, px: 1.5 }}>
