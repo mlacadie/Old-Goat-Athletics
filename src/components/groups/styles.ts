@@ -36,3 +36,19 @@ export const heroChipSx = {
   px: 1,
   '& .MuiChip-icon': { color: '#fff' },
 } as const
+
+/** A white card in the Group page's members-only area (Calendar, Members, the join prompt). */
+export const panelSx = {
+  bgcolor: '#fff',
+  border: `1px solid ${colors.grayLight}`,
+  borderRadius: '18px',
+  p: 2.5,
+} as const
+
+/** A card's heading in the members-only area ("Members", the Calendar's month). */
+export const panelHeadingSx = {
+  m: 0,
+  fontSize: '1.1rem',
+  fontWeight: 700,
+  color: colors.navyDarker,
+} as const

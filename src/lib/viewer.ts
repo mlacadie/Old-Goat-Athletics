@@ -26,3 +26,8 @@ export function getGroupRole(group: Pick<Group, 'ownerId'>, userId: string | nul
   if (userId === group.ownerId) return 'owner'
   return hasJoined ? 'member' : 'user'
 }
+
+/** Members and the Owner see members-only content (Announcements, Events, the Members list). */
+export function canSeeMembersOnly(role: GroupRole): boolean {
+  return role === 'member' || role === 'owner'
+}

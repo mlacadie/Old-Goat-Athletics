@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import GroupPage from '../../../components/groups/GroupPage'
+import { todayKey } from '../../../lib/calendar'
 import { getGroup } from '../../../lib/groups'
+import { getMembersOnlyContent } from '../../../lib/membersOnly'
 import { hasJoined } from '../../../lib/memberships'
 import { getCurrentUserId, getGroupRole } from '../../../lib/viewer'
 
@@ -23,5 +25,11 @@ export default async function Page({ params }: Props) {
   const userId = await getCurrentUserId()
   // Owners are Members by owning the Group, so only look up a Membership for other Users.
   const joined = userId !== null && userId !== group.ownerId && (await hasJoined(userId, group.id))
-  return <GroupPage group={group} role={getGroupRole(group, userId, joined)} />
+  const role = getGroupRole(group, userId, joined)
+  // Null for non-members, so members-only content is never sent to them.
+  const membersOnly = await getMembersOnlyContent(group, role, userId)
+
+  const today = todayKey()
+
+  return <GroupPage group={group} role={role} membersOnly={membersOnly} today={today} />
 }
