@@ -13,7 +13,8 @@ export const metadata: Metadata = { title: 'Edit Group | Old Goat Athletics' }
 /** Signed-in Users only (see proxy.ts). Anyone but the Group Owner gets "Group not found". */
 export default async function Page({ params }: Props) {
   const group = await getGroup((await params).groupId)
-  if (!group || getGroupRole(group, await getCurrentUserId()) !== 'owner') notFound()
+  // Only ownership matters here, so there's no need to look up a Membership.
+  if (!group || getGroupRole(group, await getCurrentUserId(), false) !== 'owner') notFound()
 
   return (
     <GroupForm

@@ -10,7 +10,7 @@ This describes the site we are building toward, not only what exists today. Term
 | --- | --- |
 | **Visitor** | Anyone browsing the site who is not signed in. Can see public pages, the Groups directory, and each Group's public info. |
 | **User** | Someone with an account who is signed in. Every User is also able to do everything a Visitor can. |
-| **Member** **(planned)** | A User who has joined a specific Group. Membership is per Group: one User can be a Member of many Groups. |
+| **Member** | A User who has joined a specific Group. Membership is per Group: one User can be a Member of many Groups. The Group Owner is a Member of their own Group by owning it. Members see a **Member** badge on the Group card and Group page. Stored in the `memberships` table. |
 | **Group Owner** | The User who owns a Group, usually the one who added it. Every Group has exactly one (the `ownerId` field). Sees a **Your Group** badge on their Group card and Group page, edits the Group's info and links with **Edit Group**, and **(planned)** manages its Announcements and Events. The placeholder Groups are owned by `"site-admin"`. |
 | **Site Admin** **(planned)** | Old Goat Athletics staff who can moderate any Group or User. |
 
@@ -23,7 +23,7 @@ This describes the site we are building toward, not only what exists today. Term
 | **Group** | A club, team, or crew listed on the site (e.g. "Old Goat Track Club"). This is the canonical term. Stored in the `groups` database table. Older copy may say "club"; it means the same thing. |
 | **Groups page** | The directory at `/groups` that lists every Group as a card, with search, sport pills, and a state filter. |
 | **Sport pills** | The row of sport filter buttons on the Groups page. One pill per sport that has a Group. When the pills don't fit, the row scrolls sideways, shows left/right arrow buttons, and fades the pills out toward the arrows. |
-| **Group card** | One Group's tile on the Groups page: Group image, sport, name, location, description, and two buttons, **View Group** (opens the Group page) and **Join**. Join doesn't do anything until **Joining** ships. On the Group Owner's own Groups, the card shows a **Your Group** badge and **Edit Group** instead of Join. The Group's links live on the Group page, not the card. |
+| **Group card** | One Group's tile on the Groups page: Group image, sport, name, location, description, and two buttons, **View Group** (opens the Group page) and **Join**. On Groups the viewer joined, the card shows a **Member** badge and **Leave** instead of Join. On the Group Owner's own Groups, it shows a **Your Group** badge and **Edit Group** instead. The Group's links live on the Group page, not the card. |
 | **Group page** | A page dedicated to a single Group (e.g. `/groups/old-goat-track-club`), opened from its Group card. Shows the Group banner across the top, then the Group's public info and Group links. |
 | **Group links** | Up to 3 links on a Group page, each with a label and a URL: the Group's website or socials (Instagram, Strava, ...). Shown with an icon for the site they point to. The Group Owner adds them when adding or editing a Group. |
 | **Group image** | An optional picture of the Group, shown on the Group card (the `image` field). **(planned, Group Images)** The Group Owner uploads it when adding or editing a Group, and it also shows on the Group page. Without one, the default Group image is used. |
@@ -32,8 +32,8 @@ This describes the site we are building toward, not only what exists today. Term
 | **Sport list** | The set list of sports a Group Owner picks from when adding or editing a Group, with **Other** always last. Lives in `src/data/sports.ts`. |
 | **Public info** | The parts of a Group anyone can see: name, sport, location, description, tags, Group links, Group image, and Group banner. |
 | **Members-only content** **(planned)** | The parts of a Group page only Members can see: Announcements, Events/Calendar, and the Members list. |
-| **Join** **(planned)** | The action a User takes to become a Member of a Group. Joining also subscribes them to that Group's Notifications. We use "join" rather than "subscribe" in the UI and code. |
-| **Leave** **(planned)** | The opposite of Join. Stops membership and Notifications. |
+| **Join** | The action a User takes to become a Member of a Group, from its Group card or Group page. Instant, with no approval. Visitors are asked to sign in first. Joining also subscribes them to that Group's Notifications. We use "join" rather than "subscribe" in the UI and code. |
+| **Leave** | The opposite of Join, offered to Members in its place. Takes effect right away and stops membership and Notifications. The Owner can't leave their own Group. |
 
 ## Group content (planned)
 
@@ -50,7 +50,8 @@ This describes the site we are building toward, not only what exists today. Term
 | --- | --- |
 | **Sign up** | Creating an account at `/sign-up` (email code, password, or Google). Collects the email used for Notifications and an optional first and last name. Phone numbers come later. |
 | **Sign in / Sign out** | Starting and ending a session. "Signed in" = User, "signed out" = Visitor. |
-| **Profile** | `/profile`, where a User edits their name, email, password, and Notification preferences. |
+| **Profile** | `/profile`, where a User edits their name, email, password, and Notification preferences, and sees **My Groups**. |
+| **My Groups** | The tab on the Profile listing the Groups a User owns or joined, filtered by All, Owned, or Joined. |
 | **Display name** | How a User is shown to others: their first and last name, or "Old Goat" if they set none. Never their email or other contact info. |
 
 ## Notifications (planned)

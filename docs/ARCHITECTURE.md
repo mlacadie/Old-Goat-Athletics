@@ -20,12 +20,12 @@ Each route is a folder under [src/app/](../src/app/). Every page is wrapped by [
 | Path | Files | Notes |
 | --- | --- | --- |
 | `/` | [app/page.tsx](../src/app/page.tsx) | Stacked Home page Sections from [components/home/](../src/components/home/). |
-| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Rendered per request from the database (`listGroupsFor(userId)`), so new Groups show up right away. Each Group is sent to the browser as a `GroupListing`: no `ownerId`, just `isOwner` for the viewer. Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. "Add your Group" opens `/groups/new`. Cards for the viewer's own Groups get a **Your Group** badge and an **Edit Group** button in place of Join. "Join" is a placeholder with no action yet. |
+| `/groups` | [app/groups/page.tsx](../src/app/groups/page.tsx) | Rendered per request from the database (`listGroupsFor(userId)`), so new Groups show up right away. Each Group is sent to the browser as a `GroupListing`: no `ownerId`, just `isOwner` and `isMember` for the viewer. Renders [components/groups/GroupsPage.tsx](../src/components/groups/GroupsPage.tsx): directory of Groups with search (name, sport, city, state, tags), sport pills ([SportPills.tsx](../src/components/groups/SportPills.tsx): scrolls sideways with arrow buttons and edge fades once the pills overflow), and a state filter. Each Group is a [GroupCard.tsx](../src/components/groups/GroupCard.tsx); its "View Group" button opens the Group page. "Add your Group" opens `/groups/new`. Cards for the viewer's own Groups get a **Your Group** badge and an **Edit Group** button in place of Join; Groups they joined get a **Member** badge and **Leave** (see **Joining**). |
 | `/groups/new` | [app/groups/new/page.tsx](../src/app/groups/new/page.tsx), [app/groups/actions.ts](../src/app/groups/actions.ts) | Signed-in Users only. The Add a Group form ([GroupForm.tsx](../src/components/groups/GroupForm.tsx)). The `addGroup` server action saves it with the User as Group Owner and opens the new Group page. New Groups appear right away (Site Admin approval comes with **Group Approval**). |
 | `/groups/[groupId]/edit` | [app/groups/[groupId]/edit/page.tsx](../src/app/groups/[groupId]/edit/page.tsx) | Signed-in Users only. The same form, filled in, for the Group Owner, opened from **Edit Group** on the Group page. Anyone else gets "Group not found". The `editGroup` server action checks ownership again before saving. The Group's id never changes. |
-| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, loaded with `getGroup(id)` and rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, and Join; Owners get a **Your Group** badge and **Edit Group** instead) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". Join is a placeholder. |
+| `/groups/[groupId]` | [app/groups/[groupId]/page.tsx](../src/app/groups/[groupId]/page.tsx), [not-found.tsx](../src/app/groups/[groupId]/not-found.tsx) | The Group page, one per Group, loaded with `getGroup(id)` and rendered per request because it checks who is viewing. Renders [GroupPage.tsx](../src/components/groups/GroupPage.tsx): [GroupHero.tsx](../src/components/groups/GroupHero.tsx) (Group banner or branded fallback, sport and location, name, and [GroupActions.tsx](../src/components/groups/GroupActions.tsx): Join, a **Member** badge and Leave for Members, or a **Your Group** badge and **Edit Group** for the Owner) and an About row with the description, tags, and [GroupLinks.tsx](../src/components/groups/GroupLinks.tsx). Unknown ids show "Group not found". |
 | `/sign-in`, `/sign-up` | [app/sign-in/[[...sign-in]]/page.tsx](../src/app/sign-in/[[...sign-in]]/page.tsx), [app/sign-up/[[...sign-up]]/page.tsx](../src/app/sign-up/[[...sign-up]]/page.tsx) | Clerk's `<SignIn>` / `<SignUp>` forms inside [AccountSection.tsx](../src/components/account/AccountSection.tsx). Catch-all folders because Clerk adds its own sub-steps (e.g. `/sign-in/factor-one`). |
-| `/profile` | [app/profile/page.tsx](../src/app/profile/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) with hash routing (tabs switch in the browser, e.g. `/profile#/security`) plus our own Notifications tab ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
+| `/profile` | [app/profile/page.tsx](../src/app/profile/page.tsx), [actions.ts](../src/app/profile/actions.ts) | Signed-in Users only. Renders [ProfileView.tsx](../src/components/account/ProfileView.tsx): Clerk's `<UserProfile>` (name, email, password, Google) with hash routing (tabs switch in the browser, e.g. `/profile#/security`) plus our own tabs: **My Groups** ([MyGroups.tsx](../src/components/account/MyGroups.tsx): the Groups the User owns or joined, from `listMyGroups()`, filterable by All / Owned / Joined) and Notifications ([NotificationSettings.tsx](../src/components/account/NotificationSettings.tsx)), saved by a server action. |
 | `/api/webhooks/clerk` | [app/api/webhooks/clerk/route.ts](../src/app/api/webhooks/clerk/route.ts) | Clerk calls this on account create, update, and delete; keeps the `users` table in sync. |
 | `/contact` | [app/contact/page.tsx](../src/app/contact/page.tsx) | Renders [components/contact/ContactPage.tsx](../src/components/contact/ContactPage.tsx): form posted to Formspree. The endpoint is still a placeholder. |
 | anything else | [app/not-found.tsx](../src/app/not-found.tsx) | 404 page with a link home. |
@@ -58,7 +58,7 @@ src/
     icons/      Custom icons not in MUI
   data/         Static content and constants: groups.ts (Group constants), sports.ts (Sport list), places.ts (countries, US states, Canadian provinces), navLinks.ts
   db/           Database: schema.ts (Drizzle tables) and index.ts (the `db` client)
-  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; groups.ts: groups table; groupForm.ts: Add / Edit Group form checks; displayName.ts)
+  lib/          Non-UI logic shared by pages (viewer.ts: who is looking; users.ts: users table; groups.ts: groups table; memberships.ts: memberships table; groupForm.ts: Add / Edit Group form checks; displayName.ts)
   types/        Shared TypeScript types (e.g. `Group`, `User`)
   theme.ts      Brand colors (`colors`) and MUI theme
   proxy.ts      Clerk on every request; protects User-only routes (Next.js 16's name for middleware)
@@ -93,6 +93,15 @@ Groups live in the **`groups`** table (see **Database**). Server code reads them
 
 Every Group has an Owner. The three placeholder Groups, seeded by a migration so the site has something to show while testing, are owned by `"site-admin"`.
 
+## Joining
+
+A User joins a Group with **Join** on its Group card or Group page, and becomes a Member; **Leave** undoes it. Anyone can join instantly; there are no requests to approve. Joining also turns on that Group's Notifications (there is no separate subscribe step).
+
+- **Button:** [JoinButton.tsx](../src/components/groups/JoinButton.tsx), shared by the card and the hero. Visitors get a link to `/sign-in?redirect_url=<this page>`. For Users it calls the `joinGroup` / `leaveGroup` server actions in [app/groups/actions.ts](../src/app/groups/actions.ts) and flips right away with `useOptimistic`. The actions revalidate `/groups` and every Group page, so the page re-renders with the saved state; if the action fails, the button flips back and a message appears. Leave doesn't ask for confirmation, because rejoining is one click.
+- **Server:** the actions read the User from Clerk, call `ensureUser()` ([users.ts](../src/lib/users.ts)) so the User's row exists even if the webhook never arrived (local development), then `addMembership()` / `removeMembership()` in [memberships.ts](../src/lib/memberships.ts). Both are safe to repeat: joining twice, leaving a Group you're not in, or joining a Group you own or that doesn't exist does nothing.
+- **Owners** are Members by owning the Group (`owner_id`), with no Membership row. They get Edit Group instead of Join and have no Leave.
+- **My Groups** on the profile lists the Groups a User owns or joined.
+
 ## Accounts
 
 - **Clerk owns sign-in.** Users sign in with an email code, a password, or Google (switched on in the Clerk dashboard, not in code). Names are Clerk's optional first and last name. [layout.tsx](../src/app/layout.tsx) wraps the app in `<ClerkProvider>`, which points at our `/sign-in` and `/sign-up` pages and styles Clerk's forms with the theme's navy, font, and corner radius.
@@ -103,12 +112,14 @@ Every Group has an Owner. The three placeholder Groups, seeded by a migration so
 
 ## Database
 
-Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code calls `getDb()` from [src/db/index.ts](../src/db/index.ts), which connects on first use, so pages that never query the database (and `yarn build`) work without `DATABASE_URL`. Only server code may touch the database ([users.ts](../src/lib/users.ts) and [groups.ts](../src/lib/groups.ts) import `server-only` to enforce this).
+Neon Postgres, accessed with Drizzle. The schema is [src/db/schema.ts](../src/db/schema.ts); server code calls `getDb()` from [src/db/index.ts](../src/db/index.ts), which connects on first use, so pages that never query the database (and `yarn build`) work without `DATABASE_URL`. Only server code may touch the database ([users.ts](../src/lib/users.ts), [groups.ts](../src/lib/groups.ts), and [memberships.ts](../src/lib/memberships.ts) import `server-only` to enforce this).
 
 **`users`** mirrors each Clerk account: `id` (the Clerk user id), `display_name`, `email` (primary email; null if the account has none), `email_notifications` (default on), `created_at`, `updated_at`. It is kept in sync two ways:
 
 1. **Clerk webhook** (`/api/webhooks/clerk`): on `user.created` / `user.updated` it upserts the row from the event's own user data (no call back to Clerk, so late or retried events still succeed); on `user.deleted` it deletes it.
-2. **Profile page:** opening `/profile` upserts the row too, writing only if the name or email changed. This covers local development, where Clerk can't reach the webhook, and any missed webhook.
+2. **Profile page:** opening `/profile` upserts the row too, writing only if the name or email changed. This covers local development, where Clerk can't reach the webhook, and any missed webhook. Joining a Group also creates the row if it's missing (`ensureUser()`).
+
+**`memberships`** records who joined which Group: `user_id` (foreign key to `users`), `group_id` (foreign key to `groups`), `joined_at`. The primary key is `(user_id, group_id)`, so a User joins a Group at most once, and `memberships_group_id_idx` covers looking up a Group's Members. Rows are deleted with their User or Group (`on delete cascade`), so deleting an account through the webhook also removes its Memberships. Group Owners have no row (see **Joining**).
 
 **Webhook URL:** Clerk's endpoint must use the production domain, `https://old-goat-athletics.vercel.app/api/webhooks/clerk`. Vercel Deployment Protection (Standard Protection) puts every other URL, including the team URL `old-goat-athletics-old-goat1.vercel.app` and all preview URLs, behind a Vercel login, so Clerk gets a 401 there. Webhooks therefore only reach production; previews rely on the Profile page sync. Subscribed events: `user.created`, `user.updated`, `user.deleted`. When a custom domain and Clerk's production instance are set up, create a new endpoint on that domain and update `CLERK_WEBHOOK_SIGNING_SECRET` in Vercel.
 
@@ -129,9 +140,19 @@ Set in Vercel by the Clerk and Neon integrations (Preview and Production). They 
 3. `yarn db:migrate` applies it to the database in `.env.local` (the `dev` branch).
 4. On Vercel, the `vercel-build` script runs `drizzle-kit migrate` before `next build`, so each deployment migrates the database it's connected to. Local `yarn build` doesn't migrate.
 
+### Neon branches
+
+Each environment has its own database, so data and schema changes in one never reach another:
+
+| Neon branch | Used by | Notes |
+| --- | --- | --- |
+| `main` | Production | Migrated when `main` deploys, i.e. after a PR merges. |
+| `preview/<git-branch>` | That git branch's Preview deployments | Created by the Neon integration on the first Preview deployment, as a copy of `main` at that moment (real Groups and Users included). Migrated by each Preview deployment, so a PR's migrations never touch production. Deleted when the Vercel deployment is deleted, or with **Clean up branches** in Neon. |
+| `dev` | Local development (`.env.local`) | Migrated by hand with `yarn db:migrate`. Resetting it from `main` throws away local test data. |
+
 ## Who is viewing
 
-[src/lib/viewer.ts](../src/lib/viewer.ts) decides how the person looking at a Group page relates to it. `getCurrentUserId()` returns the signed-in User's id from the session token (no network call; `null` for a Visitor), and `getGroupRole(group, userId)` turns that into a `GroupRole`: `visitor`, `user`, `member` (once **Joining** exists), or `owner`. The Group page's server component works out the role and passes it down, so members-only content and Owner controls can be added by checking the role without restructuring the page. Members-only data must still be checked on the server, never only hidden in the UI.
+[src/lib/viewer.ts](../src/lib/viewer.ts) decides how the person looking at a Group page relates to it. `getCurrentUserId()` returns the signed-in User's id from the session token (no network call; `null` for a Visitor), and `getGroupRole(group, userId, hasJoined)` turns that into a `GroupRole`: `visitor`, `user`, `member` (has a Membership), or `owner` (owns the Group, which also makes them a Member). The Group page's server component looks up the Membership with `hasJoined()` (skipped for Visitors and the Owner), works out the role, and passes it down, so members-only content and Owner controls can be added by checking the role without restructuring the page. Members-only data must still be checked on the server, never only hidden in the UI.
 
 ## Checks (required before work is done)
 

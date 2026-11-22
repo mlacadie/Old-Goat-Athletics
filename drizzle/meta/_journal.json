@@ -36,6 +36,13 @@
       "when": 1795368758493,
       "tag": "0004_use_country_codes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795372578096,
+      "tag": "0005_create_memberships",
+      "breakpoints": true
     }
   ]
 }

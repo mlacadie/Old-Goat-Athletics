@@ -18,6 +18,15 @@ export const heroButtonSx = {
   '&:hover': { bgcolor: colors.bone },
 } as const
 
+/** A quieter outlined button on the Group page's dark hero (Leave). */
+export const heroOutlinedButtonSx = {
+  flexShrink: 0,
+  minHeight: 48,
+  color: '#fff',
+  borderColor: 'rgba(255,255,255,0.6)',
+  '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.08)' },
+} as const
+
 /** A role badge on the Group page's dark hero (Your Group, Member). */
 export const heroChipSx = {
   bgcolor: 'rgba(255,255,255,0.14)',
